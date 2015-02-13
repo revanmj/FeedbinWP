@@ -34,6 +34,7 @@ namespace FeedbinWP
         public String url { get; set; }
         public String author { get; set; }
         public String content { get; set; }
+        public String summary { get; set; }
         public DateTime published { get; set; }
         public bool read { get; set; }
     }

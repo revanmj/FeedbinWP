@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Data.Json;
 
@@ -71,6 +72,10 @@ namespace FeedbinWP
                                                           values[3],
                                                           DateTime.Parse(values[4]),
                                                           false);
+
+                     Regex _htmlRegex = new Regex("<.*?>");
+                     entry.summary = _htmlRegex.Replace(entry.content, string.Empty);
+
                     entries.Add(entry);
                 }
                 return entries;

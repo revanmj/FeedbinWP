@@ -10,6 +10,11 @@
 
     <Grid>
         <Hub Header="FeedbinWP">
+            <Hub.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="FeedbinWP" FontSize="24" Margin="2,30,0,0" />
+                </DataTemplate>
+            </Hub.HeaderTemplate>
 
             <!-- Hub sections -->
             <HubSection Header="unread">
@@ -25,7 +30,7 @@
                             <DataTemplate>
                                 <StackPanel Margin="0,0,0,8">
                                     <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
-                                    <TextBlock Text="{Binding content}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="2"/>
+                                    <TextBlock Text="{Binding summary}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" MaxLines="2"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
