@@ -40,7 +40,7 @@ namespace FeedbinWP
         {
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void LogIn_Click(object sender, RoutedEventArgs e)
         {
             String username = loginField.Text;
             String password = passwordField.Password;

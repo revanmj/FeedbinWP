@@ -75,7 +75,7 @@
     <Page.BottomAppBar>
         <CommandBar>
             <AppBarButton Label="Log in" Icon="Permissions" Click="LogIn_Click"/>
-            <AppBarButton Label="Sync" Icon="Refresh" Click="Sync_Click"/>
+            <AppBarButton Label="Sync" Icon="Sync" Click="Sync_Click"/>
             <AppBarButton Label="Add subscription" Icon="Add" Click="AddSubs_Click"/>
 
             <CommandBar.SecondaryCommands>

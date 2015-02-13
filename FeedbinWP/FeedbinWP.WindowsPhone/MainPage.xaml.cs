@@ -7,6 +7,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Security.Credentials;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -79,6 +80,7 @@ namespace FeedbinWP
             credential.RetrievePassword();
 
             entries = await FeedbinSync.getUnreadItems(credential.UserName, credential.Password);
+            entries =  new ObservableCollection<FeedbinEntry>(entries.OrderByDescending(f => f.published));
             this.DataContext = entries;
 
             await progressbar.HideAsync();
@@ -86,7 +88,12 @@ namespace FeedbinWP
 
         private void ArticleClick(Object sender, ItemClickEventArgs e)
         {
-
+            FeedbinEntry item = e.ClickedItem as FeedbinEntry;
+            if (item != null)
+            {
+                Frame.Navigate(typeof(ArticlePage), item);
+            }
         }
+
     }
 }

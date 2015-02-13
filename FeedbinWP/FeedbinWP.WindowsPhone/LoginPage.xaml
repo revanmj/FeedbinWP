@@ -10,8 +10,15 @@
 
     <Grid>
         <TextBox Name="loginField" InputScope="EmailSmtpAddress" HorizontalAlignment="Left" Margin="30,144,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="332" />
-        <PasswordBox Name="passwordField" HorizontalAlignment="Left" Margin="30,224,0,0" VerticalAlignment="Top" Width="332"/>
-        <Button Content="Log In" HorizontalAlignment="Left" Margin="80,303,0,0" VerticalAlignment="Top" Width="240" Click="Button_Click"/>
+        <PasswordBox Name="passwordField" HorizontalAlignment="Left" Margin="30,235,0,0" VerticalAlignment="Top" Width="332"/>
+        <TextBlock HorizontalAlignment="Left" Margin="30,115,0,0" TextWrapping="Wrap" FontSize="20" Text="Login:" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="30,206,0,0" TextWrapping="Wrap" FontSize="20" Text="Password:" VerticalAlignment="Top"/>
 
     </Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Label="Log in" Icon="Accept" Click="LogIn_Click"/>
+        </CommandBar>
+    </Page.BottomAppBar>
 </Page>
