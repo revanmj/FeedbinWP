@@ -1,0 +1,86 @@
+﻿<Page
+    x:Class="FeedbinWP.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FeedbinWP"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Hub Header="FeedbinWP">
+
+            <!-- Hub sections -->
+            <HubSection Header="unread">
+                <DataTemplate>
+                    <ListView 
+                        x:Name="unreadList"                        
+                        SelectionMode="None"
+                        IsItemClickEnabled="True"
+                        ItemClick="ArticleClick"
+                        ItemsSource="{Binding}"
+                        ContinuumNavigationTransitionInfo.ExitElementContainer="True">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,0,0,19">
+                                    <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
+                                    <TextBlock Text="{Binding content}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="2"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DataTemplate>
+            </HubSection>
+            <HubSection Header="all">
+                <DataTemplate>
+                    <ListView 
+                        Name="allList"
+                        SelectionMode="None"
+                        IsItemClickEnabled="True"
+                        ItemClick="ArticleClick"
+                        ContinuumNavigationTransitionInfo.ExitElementContainer="True">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,0,0,19">
+                                    <TextBlock Text="Article Title" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
+                                    <TextBlock Text="Lorem ipsum dolor sit amet, consectetuer ising elit... " Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DataTemplate>
+            </HubSection>
+            <HubSection Header="starred">
+                <DataTemplate>
+                    <ListView 
+                        Name="starredList"
+                        SelectionMode="None"
+                        IsItemClickEnabled="True"
+                        ItemClick="ArticleClick"
+                        ContinuumNavigationTransitionInfo.ExitElementContainer="True">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,0,0,19">
+                                    <TextBlock Text="Article Title" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
+                                    <TextBlock Text="Lorem ipsum dolor sit amet, consectetuer ising elit... " Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DataTemplate>
+            </HubSection>
+        </Hub>
+    </Grid>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Label="Log in" Icon="Permissions" Click="LogIn_Click"/>
+            <AppBarButton Label="Sync" Icon="Refresh" Click="Sync_Click"/>
+            <AppBarButton Label="Add subscription" Icon="Add" Click="AddSubs_Click"/>
+
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Settings" Icon="Edit" Click="Settings_Click"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+</Page>
