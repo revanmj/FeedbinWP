@@ -16,5 +16,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)FeedbinEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FeedbinSync.cs" />
   </ItemGroup>
 </Project>

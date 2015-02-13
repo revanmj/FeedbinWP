@@ -6,6 +6,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Security.Credentials;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -23,17 +25,15 @@ namespace FeedbinWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        ObservableCollection<FeedbinEntry> entries;
+
         public MainPage()
         {
             this.InitializeComponent();
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
 
-            ObservableCollection<FeedbinEntry> tmp = new ObservableCollection<FeedbinEntry>();
-            tmp.Add(new FeedbinEntry("Title 1", "1Lorem ipsum dolor sit amet, consectetuer ising elit... "));
-            tmp.Add(new FeedbinEntry("Title 2", "2Lorem ipsum dolor sit amet, consectetuer ising elit... "));
-            tmp.Add(new FeedbinEntry("Title 3", "3Lorem ipsum dolor sit amet, consectetuer ising elit... "));
-            this.DataContext = tmp;
+            entries = new ObservableCollection<FeedbinEntry>();
         }
 
         /// <summary>
@@ -67,9 +67,21 @@ namespace FeedbinWP
 
         }
 
-        private void Sync_Click(Object sender, RoutedEventArgs e)
+        private async void Sync_Click(Object sender, RoutedEventArgs e)
         {
+            StatusBarProgressIndicator progressbar = StatusBar.GetForCurrentView().ProgressIndicator;
+            progressbar.Text = "Syncing entries ...";
+            await progressbar.ShowAsync();
 
+            var vault = new Windows.Security.Credentials.PasswordVault();
+            var credentialList = vault.FindAllByResource("Feedbin");
+            PasswordCredential credential = credentialList[0];
+            credential.RetrievePassword();
+
+            entries = await FeedbinSync.getUnreadItems(credential.UserName, credential.Password);
+            this.DataContext = entries;
+
+            await progressbar.HideAsync();
         }
 
         private void ArticleClick(Object sender, ItemClickEventArgs e)

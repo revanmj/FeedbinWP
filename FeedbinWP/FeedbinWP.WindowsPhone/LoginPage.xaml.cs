@@ -50,26 +50,22 @@ namespace FeedbinWP
 
             await progressbar.ShowAsync();
 
-            using (var client = new HttpClient())
+            bool result = await FeedbinSync.Login(username, password);
+
+            await progressbar.HideAsync();
+
+            if (result)
             {
-                client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(username + ":" + password)));
+                var vault = new Windows.Security.Credentials.PasswordVault();
+                vault.Add(new Windows.Security.Credentials.PasswordCredential("Feedbin", username, password));
 
-                HttpResponseMessage response = await client.GetAsync(new Uri("https://api.feedbin.com/v2/authentication.json"));
-                await progressbar.HideAsync();
-                if (response.IsSuccessStatusCode)
-                {
-                    var vault = new Windows.Security.Credentials.PasswordVault();
-                    vault.Add(new Windows.Security.Credentials.PasswordCredential("Feedbin", username, password));
-                    Frame rootFrame = Window.Current.Content as Frame;
-
-                    if (rootFrame != null && rootFrame.CanGoBack)
-                        rootFrame.GoBack();
-                }
-                else
-                {
-                    MessageDialog msgbox = new MessageDialog("Login unsuccesful!");
-                    await msgbox.ShowAsync();
-                }
+                Frame rootFrame = Window.Current.Content as Frame;
+                if (rootFrame != null && rootFrame.CanGoBack)
+                    rootFrame.GoBack();
+            } else
+            {
+                MessageDialog msgbox = new MessageDialog("Login unsuccesful!");
+                await msgbox.ShowAsync();
             }
 
         }

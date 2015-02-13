@@ -23,7 +23,7 @@
                         ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Margin="0,0,0,19">
+                                <StackPanel Margin="0,0,0,8">
                                     <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
                                     <TextBlock Text="{Binding content}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="2"/>
                                 </StackPanel>
