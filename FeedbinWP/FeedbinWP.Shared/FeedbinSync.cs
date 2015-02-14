@@ -68,7 +68,7 @@ namespace FeedbinWP
                                                       false, false);
 
                 Regex _htmlRegex = new Regex("<.*?>");
-                entry.summary = _htmlRegex.Replace(entry.content, string.Empty);
+                entry.summary = _htmlRegex.Replace(entry.content, string.Empty).Replace("\n", "").Replace("\r", "");
 
                 entries.Add(entry);
             }

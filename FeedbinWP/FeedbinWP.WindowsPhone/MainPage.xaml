@@ -29,6 +29,7 @@
                         IsItemClickEnabled="True"
                         ItemClick="ArticleClick"
                         ItemsSource="{Binding unreadEntries}"
+                        Margin="0,0,0,0"
                         ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>

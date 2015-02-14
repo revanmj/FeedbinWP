@@ -9,16 +9,29 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <TextBlock Name="titleBox" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="NoWrap" Text="Title" FontSize="20" VerticalAlignment="Top"/>
-        <WebView Name="webview" HorizontalAlignment="Left" Height="540" Margin="10,39,0,0" VerticalAlignment="Top" Width="380"/>
+        <TextBlock Name="titleBox" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="NoWrap" Text="Title" FontSize="24" VerticalAlignment="Top" TextTrimming="CharacterEllipsis"/>
+        <WebView Name="webview" HorizontalAlignment="Left" Height="536" Margin="10,44,0,0" VerticalAlignment="Top" Width="380"/>
 
     </Grid>
 
     <Page.BottomAppBar>
         <CommandBar>
+            <AppBarButton Label="Mark as read" Click="Share_Click">
+                <AppBarButton.Icon>
+                    <BitmapIcon UriSource="Images/unread.png"/>
+                </AppBarButton.Icon>
+            </AppBarButton>
             <AppBarButton Label="Web" Icon="World" Click="Web_Click"/>
-            <AppBarButton Label="Readability" Icon="Read" Click="Readability_Click"/>
-            <AppBarButton Label="Share" Icon="Send" Click="Share_Click"/>
+            <AppBarButton Label="Readability" Click="Readability_Click">
+                <AppBarButton.Icon>
+                    <BitmapIcon UriSource="Images/readability.png"/>
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="Share" Click="Share_Click">
+                <AppBarButton.Icon>
+                    <BitmapIcon UriSource="Images/share.png"/>
+                </AppBarButton.Icon>
+            </AppBarButton>
 
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="Settings" Icon="Edit" Click="Share_Click"/>

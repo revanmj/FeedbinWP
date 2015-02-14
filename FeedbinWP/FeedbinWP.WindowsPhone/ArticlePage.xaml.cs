@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -27,6 +28,7 @@ namespace FeedbinWP
     {
         FeedbinEntry entry;
         DataTransferManager _dataTransferManager;
+        String style;
 
         public ArticlePage()
         {
@@ -38,11 +40,17 @@ namespace FeedbinWP
         /// </summary>
         /// <param name="e">Event data that describes how this page was reached.
         /// This parameter is typically used to configure the page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             entry = e.Parameter as FeedbinEntry;
             titleBox.Text = entry.title;
-            webview.NavigateToString(entry.content);
+
+            style = "";
+            StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(new System.Uri("ms-appx:///Assets/ReadingViewStyle.css"));
+            using (StreamReader sRead = new StreamReader(await file.OpenStreamForReadAsync()))
+                style = await sRead.ReadToEndAsync();
+
+            webview.NavigateToString(style + entry.content);
 
             _dataTransferManager = DataTransferManager.GetForCurrentView();
             _dataTransferManager.DataRequested += OnDataRequested;
@@ -74,7 +82,7 @@ namespace FeedbinWP
 
             String newContent = await ReadabilityParser.parseViaReadability(entry.url);
             if (newContent != null)
-                webview.NavigateToString(newContent);
+                webview.NavigateToString(style + newContent);
             else
             {
                 MessageDialog msg = new MessageDialog("Readability error.");
