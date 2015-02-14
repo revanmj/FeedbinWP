@@ -26,7 +26,7 @@ namespace FeedbinWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        ObservableCollection<FeedbinEntry> entries;
+        FeedbinData data;
 
         public MainPage()
         {
@@ -34,7 +34,7 @@ namespace FeedbinWP
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
 
-            entries = new ObservableCollection<FeedbinEntry>();
+            data = new FeedbinData();
         }
 
         /// <summary>
@@ -79,9 +79,22 @@ namespace FeedbinWP
             PasswordCredential credential = credentialList[0];
             credential.RetrievePassword();
 
-            entries = await FeedbinSync.getUnreadItems(credential.UserName, credential.Password);
-            entries =  new ObservableCollection<FeedbinEntry>(entries.OrderByDescending(f => f.published));
-            this.DataContext = entries;
+            ObservableCollection<FeedbinEntry> unreadEntries;
+            ObservableCollection<FeedbinEntry> starredEntries;
+            ObservableCollection<FeedbinEntry> recentEntries;
+            //ObservableCollection<FeedbinEntry> allEntries;
+
+            unreadEntries = await FeedbinSync.getUnreadItems(credential.UserName, credential.Password);
+            unreadEntries =  new ObservableCollection<FeedbinEntry>(unreadEntries.OrderByDescending(f => f.published));
+            starredEntries = await FeedbinSync.getStarredItems(credential.UserName, credential.Password);
+            starredEntries = new ObservableCollection<FeedbinEntry>(starredEntries.OrderByDescending(f => f.published));
+            recentEntries = await FeedbinSync.getRecentrlyRead(credential.UserName, credential.Password);
+            recentEntries = new ObservableCollection<FeedbinEntry>(recentEntries.OrderByDescending(f => f.published));
+            data.unreadEntries = unreadEntries;
+            data.starredEntries = starredEntries;
+            data.recentEntries = recentEntries;
+            this.DataContext = null;
+            this.DataContext = data;
 
             await progressbar.HideAsync();
         }

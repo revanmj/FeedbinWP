@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)FeedbinData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FeedbinEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FeedbinSync.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReadabilityParser.cs" />

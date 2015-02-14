@@ -39,10 +39,9 @@ namespace FeedbinWP
             }
         }
 
-        public static async Task<ObservableCollection<FeedbinEntry>> getEntries(String username, String password, String ids)
+        public static ObservableCollection<FeedbinEntry> parseEntriesJson(String data)
         {
-            String data_entries = await makeApiGetRequest(username, password, feedbinApiUrl + entriesByIdUrl + ids);
-            JsonArray parsedEntries = JsonArray.Parse(data_entries);
+            JsonArray parsedEntries = JsonArray.Parse(data);
             ObservableCollection<FeedbinEntry> entries = new ObservableCollection<FeedbinEntry>();
             foreach (JsonValue obj in parsedEntries)
             {
@@ -66,13 +65,26 @@ namespace FeedbinWP
                                                       values[2],
                                                       values[3],
                                                       DateTime.Parse(values[4]),
-                                                      false);
+                                                      false, false);
 
                 Regex _htmlRegex = new Regex("<.*?>");
                 entry.summary = _htmlRegex.Replace(entry.content, string.Empty);
 
                 entries.Add(entry);
             }
+            return entries;
+        }
+
+        public static async Task<String> getEntries(String username, String password, String ids)
+        {
+            String data_entries = await makeApiGetRequest(username, password, feedbinApiUrl + entriesByIdUrl + ids);
+            return data_entries;
+        }
+
+        public static async Task<ObservableCollection<FeedbinEntry>> getEntriesSince(String username, String password, DateTime since)
+        {
+            String data = await makeApiGetRequest(username, password, feedbinApiUrl + entriesSinceUrl + since.ToString("o"));
+            ObservableCollection<FeedbinEntry> entries = parseEntriesJson(data);
             return entries;
         }
 
@@ -90,7 +102,8 @@ namespace FeedbinWP
                         ids += ",";
                 }
 
-                ObservableCollection<FeedbinEntry> entries = await getEntries(username, password, ids);
+                String entries_json = await getEntries(username, password, ids);
+                ObservableCollection<FeedbinEntry> entries = parseEntriesJson(entries_json);
                 return entries;
             }
             else
@@ -112,7 +125,8 @@ namespace FeedbinWP
                         ids += ",";
                 }
 
-                ObservableCollection<FeedbinEntry> entries = await getEntries(username, password, ids);
+                String entries_json = await getEntries(username, password, ids);
+                ObservableCollection<FeedbinEntry> entries = parseEntriesJson(entries_json);
                 return entries;
             }
             else
@@ -134,7 +148,8 @@ namespace FeedbinWP
                         ids += ",";
                 }
 
-                ObservableCollection<FeedbinEntry> entries = await getEntries(username, password, ids);
+                String entries_json = await getEntries(username, password, ids);
+                ObservableCollection<FeedbinEntry> entries = parseEntriesJson(entries_json);
                 return entries;
             }
             else

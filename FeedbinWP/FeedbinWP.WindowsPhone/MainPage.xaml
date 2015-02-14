@@ -9,27 +9,31 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Hub Header="FeedbinWP">
+        <Hub Name="MainHub" Header="FeedbinWP">
             <Hub.HeaderTemplate>
                 <DataTemplate>
-                    <TextBlock Text="FeedbinWP" FontSize="24" Margin="2,30,0,0" />
+                    <TextBlock Text="{Binding}" FontSize="24" Margin="3,30,0,0" />
                 </DataTemplate>
             </Hub.HeaderTemplate>
 
             <!-- Hub sections -->
-            <HubSection Header="unread">
+            <HubSection Header="unread" Name="unread">
+                <HubSection.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="24" Margin="0,0,0,0" />
+                    </DataTemplate>
+                </HubSection.HeaderTemplate>
                 <DataTemplate>
-                    <ListView 
-                        x:Name="unreadList"                        
+                    <ListView                        
                         SelectionMode="None"
                         IsItemClickEnabled="True"
                         ItemClick="ArticleClick"
-                        ItemsSource="{Binding}"
+                        ItemsSource="{Binding unreadEntries}"
                         ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0,0,0,8">
-                                    <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
+                                    <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}" TextTrimming="CharacterEllipsis"/>
                                     <TextBlock Text="{Binding summary}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" MaxLines="2"/>
                                 </StackPanel>
                             </DataTemplate>
@@ -38,18 +42,24 @@
                 </DataTemplate>
             </HubSection>
             <HubSection Header="all">
+                <HubSection.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="24" Margin="0,0,0,0" />
+                    </DataTemplate>
+                </HubSection.HeaderTemplate>
                 <DataTemplate>
                     <ListView 
                         Name="allList"
                         SelectionMode="None"
                         IsItemClickEnabled="True"
                         ItemClick="ArticleClick"
+                        ItemsSource="{Binding allEntries}"
                         ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Margin="0,0,0,19">
-                                    <TextBlock Text="Article Title" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
-                                    <TextBlock Text="Lorem ipsum dolor sit amet, consectetuer ising elit... " Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"/>
+                                <StackPanel Margin="0,0,0,8">
+                                    <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding summary}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" MaxLines="2"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -57,18 +67,49 @@
                 </DataTemplate>
             </HubSection>
             <HubSection Header="starred">
+                <HubSection.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="24" Margin="0,0,0,0" />
+                    </DataTemplate>
+                </HubSection.HeaderTemplate>
                 <DataTemplate>
                     <ListView 
                         Name="starredList"
                         SelectionMode="None"
                         IsItemClickEnabled="True"
                         ItemClick="ArticleClick"
+                        ItemsSource="{Binding starredEntries}"
                         ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Margin="0,0,0,19">
-                                    <TextBlock Text="Article Title" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
-                                    <TextBlock Text="Lorem ipsum dolor sit amet, consectetuer ising elit... " Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"/>
+                                <StackPanel Margin="0,0,0,8">
+                                    <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding summary}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" MaxLines="2"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DataTemplate>
+            </HubSection>
+            <HubSection Header="recently read">
+                <HubSection.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="24" Margin="0,0,0,0" />
+                    </DataTemplate>
+                </HubSection.HeaderTemplate>
+                <DataTemplate>
+                    <ListView 
+                        Name="recentList"
+                        SelectionMode="None"
+                        IsItemClickEnabled="True"
+                        ItemClick="ArticleClick"
+                        ItemsSource="{Binding recentEntries}"
+                        ContinuumNavigationTransitionInfo.ExitElementContainer="True">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,0,0,8">
+                                    <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding summary}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" MaxLines="2"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>

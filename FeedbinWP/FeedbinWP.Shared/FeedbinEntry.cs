@@ -16,7 +16,7 @@ namespace FeedbinWP
             this.content = content;
         }
 
-        public FeedbinEntry(int id, int fid, String title, String url, String author, String content, DateTime published, bool read)
+        public FeedbinEntry(int id, int fid, String title, String url, String author, String content, DateTime published, bool read, bool star)
         {
             this.id = id;
             this.feed_id = fid;
@@ -26,6 +26,7 @@ namespace FeedbinWP
             this.content = content;
             this.published = published;
             this.read = read;
+            this.starred = star;
         }
         //[PrimaryKey]
         public int id { get; set; }
@@ -37,5 +38,6 @@ namespace FeedbinWP
         public String summary { get; set; }
         public DateTime published { get; set; }
         public bool read { get; set; }
+        public bool starred { get; set; }
     }
 }
