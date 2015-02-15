@@ -1,15 +1,32 @@
 ﻿<style media="screen" type="text/css"> 
     body {
-        background-color: black;
-        color: white;
+        background-color: black !important;
+        color: white !important;
+        font-size: large !important;
     }
     p {
-        font-family: "Segoe UI", Verdana, Sans-serif;
-        color: white;
+        font-family: "Segoe UI", Verdana, Sans-serif !important;
+        color: white !important;
+        font-size: large !important;
+    }
+    h1 {
+        font-family: "Segoe UI", Verdana, Sans-serif !important;
+        color: white !important;
+        font-size: x-large !important;
+    }
+    i {
+        font-family: "Segoe UI", Verdana, Sans-serif !important;
+        color: white !important;
+        font-size: large !important;
+    }
+    span {
+        font-family: "Segoe UI", Verdana, Sans-serif !important;
+        color: white !important;
+        font-size: large !important;
     }
     img {
-        display: block;
-        margin-left: auto;
-        margin-right: auto
+        display: block !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
     } 
 </style>

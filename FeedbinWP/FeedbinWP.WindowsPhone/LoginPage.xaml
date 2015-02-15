@@ -6,15 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="#1f1f1f">
 
-    <Grid>
-        <TextBox Name="loginField" InputScope="EmailSmtpAddress" HorizontalAlignment="Left" Margin="30,144,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="332" />
-        <PasswordBox Name="passwordField" HorizontalAlignment="Left" Margin="30,235,0,0" VerticalAlignment="Top" Width="332"/>
-        <TextBlock HorizontalAlignment="Left" Margin="30,115,0,0" TextWrapping="Wrap" FontSize="20" Text="Login:" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="30,206,0,0" TextWrapping="Wrap" FontSize="20" Text="Password:" VerticalAlignment="Top"/>
-
-    </Grid>
+    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="20">
+        <TextBox Name="email" InputScope="EmailSmtpAddress" Header="Email address"/>
+        <PasswordBox  Name="passwd" Header="Password" IsPasswordRevealButtonEnabled="True"/>
+    </StackPanel>
 
     <Page.BottomAppBar>
         <CommandBar>

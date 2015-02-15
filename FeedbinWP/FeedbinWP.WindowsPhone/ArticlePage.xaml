@@ -9,8 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <TextBlock Name="titleBox" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="NoWrap" Text="Title" FontSize="24" VerticalAlignment="Top" TextTrimming="CharacterEllipsis"/>
-        <WebView Name="webview" HorizontalAlignment="Left" Height="536" Margin="10,44,0,0" VerticalAlignment="Top" Width="380"/>
+        <WebView Name="webview" HorizontalAlignment="Left" Height="570" Margin="10,10,0,0" VerticalAlignment="Top" Width="380"/>
 
     </Grid>
 

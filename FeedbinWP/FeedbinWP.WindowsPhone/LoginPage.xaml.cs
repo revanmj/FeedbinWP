@@ -42,8 +42,8 @@ namespace FeedbinWP
 
         private async void LogIn_Click(object sender, RoutedEventArgs e)
         {
-            String username = loginField.Text;
-            String password = passwordField.Password;
+            String username = email.Text;
+            String password = passwd.Password;
 
             StatusBarProgressIndicator progressbar = StatusBar.GetForCurrentView().ProgressIndicator;
             progressbar.Text = "Logging in ...";
@@ -59,9 +59,16 @@ namespace FeedbinWP
                 var vault = new Windows.Security.Credentials.PasswordVault();
                 vault.Add(new Windows.Security.Credentials.PasswordCredential("Feedbin", username, password));
 
+                SettingsData settings = new SettingsData();
+                settings.readSettings();
+                settings.loggedIn = true;
+                settings.saveSettings();
+
                 Frame rootFrame = Window.Current.Content as Frame;
                 if (rootFrame != null && rootFrame.CanGoBack)
                     rootFrame.GoBack();
+                else if (!rootFrame.CanGoBack)
+                    Frame.Navigate(typeof(MainPage));
             } else
             {
                 MessageDialog msgbox = new MessageDialog("Login unsuccesful!");

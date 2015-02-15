@@ -64,8 +64,7 @@ namespace FeedbinWP
                                                       values[1],
                                                       values[2],
                                                       values[3],
-                                                      DateTime.Parse(values[4]),
-                                                      false, false);
+                                                      DateTime.Parse(values[4]));
 
                 Regex _htmlRegex = new Regex("<.*?>");
                 entry.summary = _htmlRegex.Replace(entry.content, string.Empty).Replace("\n", "").Replace("\r", "");
@@ -134,7 +133,7 @@ namespace FeedbinWP
 
         }
 
-        public static async Task<ObservableCollection<FeedbinEntry>> getRecentrlyRead(String username, String password)
+        public static async Task<ObservableCollection<FeedbinEntry>> getRecentlyRead(String username, String password)
         {
             String data_ids = await makeApiGetRequest(username, password, feedbinApiUrl + recentlyReadUrl);
             if (data_ids != null)
@@ -157,7 +156,7 @@ namespace FeedbinWP
 
         }
 
-        static private async Task<bool> addSubscription(String username, String password, String url)
+        static public async Task<bool> addSubscription(String username, String password, String url)
         {
             StringContent json = new StringContent("{\"feed_url\": \"" + url + "\"}");
             String data = await makeApiPostRequest(username, password, feedbinApiUrl + subscriptionsUrl, json);
@@ -166,7 +165,7 @@ namespace FeedbinWP
             return false;
         }
 
-        static private async Task<bool> updateSubscription(String username, String password, int feed_id, String title)
+        static public async Task<bool> updateSubscription(String username, String password, int feed_id, String title)
         {
             StringContent message = new StringContent("{\"title\": \"" + title + "\"}");
             String data = await makeApiPostRequest(username, password, feedbinApiUrl + singleSubscriptionUrl + "/" + feed_id + "/update.json", message);
@@ -175,13 +174,13 @@ namespace FeedbinWP
             return false;
         }
 
-        static private async Task<bool> deleteSubscription(String username, String password, int feed_id)
+        static public async Task<bool> deleteSubscription(String username, String password, int feed_id)
         {
             bool result = await makeApiDeleteRequest(username, password, feedbinApiUrl + singleSubscriptionUrl + feed_id + ".json");
             return result;
         }
 
-        static private async Task<bool> markAsRead(String username, String password, String entries)
+        static public async Task<bool> markAsRead(String username, String password, String entries)
         {
             StringContent message = new StringContent("{\"unread_entries\": [" + entries + "]}");
             String data = await makeApiPostRequest(username, password, feedbinApiUrl + unreadDeleteUrl, message);
@@ -194,7 +193,7 @@ namespace FeedbinWP
             return false;
         }
 
-        static private async Task<bool> markAsUnread(String username, String password, String entries)
+        static public async Task<bool> markAsUnread(String username, String password, String entries)
         {
             StringContent message = new StringContent("{\"unread_entries\": [" + entries + "]}");
             String data = await makeApiPostRequest(username, password, feedbinApiUrl + unreadUrl, message);
@@ -203,7 +202,7 @@ namespace FeedbinWP
             return false;
         }
 
-        static private async Task<bool> addStar(String username, String password, String entries)
+        static public async Task<bool> addStar(String username, String password, String entries)
         {
             StringContent message = new StringContent("{\"starred_entries\": [" + entries + "]}");
             String data = await makeApiPostRequest(username, password, feedbinApiUrl + starredUrl, message);
@@ -212,7 +211,7 @@ namespace FeedbinWP
             return false;
         }
 
-        static private async Task<bool> removeStar(String username, String password, String entries)
+        static public async Task<bool> removeStar(String username, String password, String entries)
         {
             StringContent message = new StringContent("{\"starred_entries\": [" + entries + "]}");
             String data = await makeApiPostRequest(username, password, feedbinApiUrl + starredDeleteUrl, message);

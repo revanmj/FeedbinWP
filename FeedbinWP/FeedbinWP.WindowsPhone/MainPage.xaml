@@ -121,12 +121,13 @@
     </Grid>
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton Label="Log in" Icon="Permissions" Click="LogIn_Click"/>
-            <AppBarButton Label="Sync" Icon="Sync" Click="Sync_Click"/>
-            <AppBarButton Label="Add subscription" Icon="Add" Click="AddSubs_Click"/>
+            <AppBarButton Name="LogInButton" Label="Log in" Icon="Permissions" Click="LogIn_Click"/>
+            <AppBarButton Name="SyncButton" Label="Sync" Icon="Sync" Click="Sync_Click"/>
+            <AppBarButton Name="AddButton" Label="Add subscription" Icon="Add" Click="AddSubs_Click"/>
 
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Settings" Icon="Edit" Click="Settings_Click"/>
+                <AppBarButton Label="Settings" Click="Settings_Click"/>
+                <AppBarButton Name="LogOutButton" Label="Log out" Click="LogOutButton_Click"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

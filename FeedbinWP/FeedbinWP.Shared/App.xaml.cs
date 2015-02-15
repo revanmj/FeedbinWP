@@ -117,7 +117,18 @@ namespace FeedbinWP
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+
+                SettingsData settings = new SettingsData();
+                settings.readSettings();
+
+                if (!settings.loggedIn)
+                {
+                    if (!rootFrame.Navigate(typeof(LoginPage), e.Arguments))
+                    {
+                        throw new Exception("Failed to create initial page");
+                    }
+                } 
+                else if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
@@ -155,5 +166,17 @@ namespace FeedbinWP
             // TODO: Save application state and stop any background activity
             deferral.Complete();
         }
+
+#if WINDOWS_PHONE_APP
+        /// <summary>
+        /// Invoked when the application is activated as the target of a sharing operation.
+        /// </summary>
+        /// <param name="e">Details about the activation request.</param>
+        protected override void OnShareTargetActivated(Windows.ApplicationModel.Activation.ShareTargetActivatedEventArgs e)
+        {
+            var shareTargetPage = new FeedbinWP.AddSubscriptionPage();
+            shareTargetPage.Activate(e);
+        }
+#endif
     }
 }

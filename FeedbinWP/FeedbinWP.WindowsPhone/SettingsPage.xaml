@@ -1,0 +1,45 @@
+﻿<Page
+    x:Class="FeedbinWP.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FeedbinWP"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid x:Name="LayoutRoot">
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0.167">
+            <TextBlock Text="FeedbinWP" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock Text="settings" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+        </StackPanel>
+
+        <!--TODO: Content should be placed within the following grid-->
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <ToggleSwitch x:Name="syncAtStartToggle" Header="ToggleSwitch" HorizontalAlignment="Left" Margin="252,10,0,0" VerticalAlignment="Top" Toggled="syncAtStartToggle_Toggled"/>
+            <TextBlock HorizontalAlignment="Left" Margin="0,32,0,0" TextWrapping="Wrap" Text="Sync at start" VerticalAlignment="Top" FontSize="24"/>
+            <ToggleSwitch x:Name="syncStarredToggle" Header="ToggleSwitch" HorizontalAlignment="Left" Margin="252,80,0,0" VerticalAlignment="Top" Toggled="syncAtStartToggle_Toggled"/>
+            <TextBlock HorizontalAlignment="Left" Margin="0,103,0,0" TextWrapping="Wrap" Text="Sync starred items" VerticalAlignment="Top" FontSize="24"/>
+            <ToggleSwitch x:Name="syncRecentToggle" Header="ToggleSwitch" HorizontalAlignment="Left" Margin="252,145,0,0" VerticalAlignment="Top" Toggled="syncAtStartToggle_Toggled"/>
+            <TextBlock HorizontalAlignment="Left" Margin="0,168,0,0" TextWrapping="Wrap" Text="Sync recently read items" VerticalAlignment="Top" FontSize="24"/>
+            <ToggleSwitch x:Name="syncAllToggle" Header="ToggleSwitch" HorizontalAlignment="Left" Margin="246,210,0,0" VerticalAlignment="Top" Toggled="syncAtStartToggle_Toggled"/>
+            <TextBlock HorizontalAlignment="Left" Margin="0,234,0,0" TextWrapping="Wrap" Text="Sync read items" VerticalAlignment="Top" FontSize="24"/>
+            <TextBlock HorizontalAlignment="Left" Margin="0,294,0,0" TextWrapping="Wrap" Text="Logged in as:" VerticalAlignment="Top" FontSize="24"/>
+            <TextBlock Name="loggedEmail" HorizontalAlignment="Left" Margin="0,328,0,0" TextWrapping="Wrap" Text="someone@example.com" VerticalAlignment="Top" FontSize="24"/>
+            <Button Content="Log out" HorizontalAlignment="Left" Margin="0,368,0,0" VerticalAlignment="Top" Width="362" Click="Button_Click"/>
+        </Grid>
+    </Grid>
+</Page>

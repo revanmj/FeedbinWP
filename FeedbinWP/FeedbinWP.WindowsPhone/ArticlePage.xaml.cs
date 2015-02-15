@@ -43,14 +43,13 @@ namespace FeedbinWP
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             entry = e.Parameter as FeedbinEntry;
-            titleBox.Text = entry.title;
 
             style = "";
             StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(new System.Uri("ms-appx:///Assets/ReadingViewStyle.css"));
             using (StreamReader sRead = new StreamReader(await file.OpenStreamForReadAsync()))
                 style = await sRead.ReadToEndAsync();
 
-            webview.NavigateToString(style + entry.content);
+            webview.NavigateToString(style + "<h1>" + entry.title + "</h1></br>"+ entry.feed_id + "</br></br>" + entry.content);
 
             _dataTransferManager = DataTransferManager.GetForCurrentView();
             _dataTransferManager.DataRequested += OnDataRequested;
@@ -82,7 +81,7 @@ namespace FeedbinWP
 
             String newContent = await ReadabilityParser.parseViaReadability(entry.url);
             if (newContent != null)
-                webview.NavigateToString(style + newContent);
+                webview.NavigateToString(style + "<h1>" + entry.title + "</h1></br>" + entry.feed_id + "</br></br>" + newContent);
             else
             {
                 MessageDialog msg = new MessageDialog("Readability error.");

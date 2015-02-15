@@ -18,6 +18,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)FeedbinData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FeedbinEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FeedbinSync.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FeedbinSyncSqlite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReadabilityParser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SettingsData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SQLite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SQLiteAsync.cs" />
   </ItemGroup>
 </Project>
