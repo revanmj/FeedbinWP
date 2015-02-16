@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Phone.UI.Input;
 using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
@@ -33,6 +34,8 @@ namespace FeedbinWP
         public ArticlePage()
         {
             this.InitializeComponent();
+
+            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
         }
 
         /// <summary>
@@ -94,6 +97,24 @@ namespace FeedbinWP
         private void Share_Click(Object sender, RoutedEventArgs e)
         {
             DataTransferManager.ShowShareUI();
+        }
+
+        void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        {
+            if (webview.CanGoBack)
+            {
+                webview.GoBack();
+                e.Handled = true;
+            }
+            else
+            {
+                Frame rootFrame = Window.Current.Content as Frame;
+                if (rootFrame != null && rootFrame.CanGoBack)
+                {
+                    rootFrame.GoBack();
+                    e.Handled = true;
+                }
+            }
         }
     }
 }

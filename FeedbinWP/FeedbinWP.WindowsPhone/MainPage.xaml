@@ -29,7 +29,7 @@
                         IsItemClickEnabled="True"
                         ItemClick="ArticleClick"
                         ItemsSource="{Binding unreadEntries}"
-                        Margin="0,0,0,0"
+                        Margin="0,-24,0,0"
                         ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -55,6 +55,7 @@
                         IsItemClickEnabled="True"
                         ItemClick="ArticleClick"
                         ItemsSource="{Binding allEntries}"
+                        Margin="0,-24,0,0"
                         ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -80,6 +81,7 @@
                         IsItemClickEnabled="True"
                         ItemClick="ArticleClick"
                         ItemsSource="{Binding starredEntries}"
+                        Margin="0,-24,0,0"
                         ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -105,7 +107,7 @@
                         IsItemClickEnabled="True"
                         ItemClick="ArticleClick"
                         ItemsSource="{Binding recentEntries}"
-                        ContinuumNavigationTransitionInfo.ExitElementContainer="True">
+                        ContinuumNavigationTransitionInfo.ExitElementContainer="True" Margin="0,-24,0,0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0,0,0,8">
