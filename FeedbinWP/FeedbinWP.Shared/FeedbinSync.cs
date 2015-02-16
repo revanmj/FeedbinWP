@@ -226,7 +226,7 @@ namespace FeedbinWP
             {
                 client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(username + ":" + password)));
 
-                var response = await client.DeleteAsync(new Uri(feedbinApiUrl + subscriptionsUrl));
+                var response = await client.DeleteAsync(new Uri(url));
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -246,7 +246,7 @@ namespace FeedbinWP
                 
                 message.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
-                var response = await client.PostAsync(new Uri(feedbinApiUrl + subscriptionsUrl), message);
+                var response = await client.PostAsync(new Uri(url), message);
                 var reply = await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)

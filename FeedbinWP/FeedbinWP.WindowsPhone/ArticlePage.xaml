@@ -15,9 +15,9 @@
 
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton Label="Mark as read" Click="Share_Click">
+            <AppBarButton Label="Star" Click="Star_Click">
                 <AppBarButton.Icon>
-                    <BitmapIcon UriSource="Images/unread.png"/>
+                    <BitmapIcon UriSource="Images/star.png"/>
                 </AppBarButton.Icon>
             </AppBarButton>
             <AppBarButton Label="Web" Icon="World" Click="Web_Click"/>
@@ -33,7 +33,7 @@
             </AppBarButton>
 
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Settings" Icon="Edit" Click="Share_Click"/>
+                <AppBarButton Label="Mark as unread" Click="Read_Click"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

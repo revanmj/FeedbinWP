@@ -7,6 +7,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Phone.UI.Input;
+using Windows.Security.Credentials;
 using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
@@ -97,6 +98,35 @@ namespace FeedbinWP
         private void Share_Click(Object sender, RoutedEventArgs e)
         {
             DataTransferManager.ShowShareUI();
+        }
+
+        private async void Star_Click(Object sender, RoutedEventArgs e)
+        {
+            var vault = new Windows.Security.Credentials.PasswordVault();
+            var credentialList = vault.FindAllByResource("Feedbin");
+            PasswordCredential credential = credentialList[0];
+            credential.RetrievePassword();
+
+            await FeedbinSync.addStar(credential.UserName, credential.Password, entry.id.ToString());
+
+            AppBarButton button = (AppBarButton)sender;
+            button.Label = "Unstar";
+            BitmapIcon icon = new BitmapIcon();
+            icon.UriSource = new Uri("ms-appx:///Images/unstar.png");
+            button.Icon = icon;
+        }
+
+        private async void Read_Click(Object sender, RoutedEventArgs e)
+        {
+            var vault = new Windows.Security.Credentials.PasswordVault();
+            var credentialList = vault.FindAllByResource("Feedbin");
+            PasswordCredential credential = credentialList[0];
+            credential.RetrievePassword();
+
+            await FeedbinSync.markAsUnread(credential.UserName, credential.Password, entry.id.ToString());
+
+            AppBarButton button = (AppBarButton)sender;
+            button.Label = "Mark as read";
         }
 
         void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
