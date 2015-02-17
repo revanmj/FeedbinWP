@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using SQLite;
 using System.Linq;
-using System.Collections.ObjectModel;
 using Windows.Data.Json;
 using System.Text.RegularExpressions;
 using System.Net.Http;
@@ -71,7 +70,7 @@ namespace FeedbinWP.Services
                     if (ids.LastIndexOf(",") == ids.Length - 1)
                         ids = ids.Substring(0, ids.Length - 2);
                     String entries_json = await getEntries(ids);
-                    ObservableCollection<FeedbinEntry> list = parseEntriesJson(entries_json);
+                    List<FeedbinEntry> list = parseEntriesJson(entries_json, 3);
                     await db.InsertAllAsync(list);
                 }
                 return 1;
@@ -110,7 +109,7 @@ namespace FeedbinWP.Services
                     if (ids.LastIndexOf(",") == ids.Length - 1)
                         ids = ids.Substring(0, ids.Length - 2);
                     String entries_json = await getEntries(ids);
-                    ObservableCollection<FeedbinEntry> list = parseEntriesJson(entries_json);
+                    List<FeedbinEntry> list = parseEntriesJson(entries_json, 1);
                     await db.InsertAllAsync(list);
                 }
                 return 1;
@@ -149,7 +148,7 @@ namespace FeedbinWP.Services
                     if (ids.LastIndexOf(",") == ids.Length - 1)
                         ids = ids.Substring(0, ids.Length - 2);
                     String entries_json = await getEntries(ids);
-                    ObservableCollection<FeedbinEntry> list = parseEntriesJson(entries_json);
+                    List<FeedbinEntry> list = parseEntriesJson(entries_json, 2);
                     await db.InsertAllAsync(list);
                 }
                 return 1;
@@ -162,7 +161,7 @@ namespace FeedbinWP.Services
         public static async Task<int> getEntriesSince(DateTime since)
         {
             String data = await makeApiGetRequest(feedbinApiUrl + entriesSinceUrl + since.ToString("o"));
-            ObservableCollection<FeedbinEntry> entries = parseEntriesJson(data);
+            List<FeedbinEntry> entries = parseEntriesJson(data);
             if (entries.Count > 0)
             {
                 SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
@@ -315,10 +314,10 @@ namespace FeedbinWP.Services
             return 1;
         }
 
-        static private ObservableCollection<FeedbinEntry> parseEntriesJson(String data)
+        static private List<FeedbinEntry> parseEntriesJson(String data, int mode = 0)
         {
             JsonArray parsedEntries = JsonArray.Parse(data);
-            ObservableCollection<FeedbinEntry> entries = new ObservableCollection<FeedbinEntry>();
+            List<FeedbinEntry> entries = new List<FeedbinEntry>();
             foreach (JsonValue obj in parsedEntries)
             {
                 String[] names = { "title", "url", "author", "content", "published" };
@@ -341,6 +340,18 @@ namespace FeedbinWP.Services
                                                       values[2],
                                                       values[3],
                                                       DateTime.Parse(values[4]));
+                switch (mode)
+                {
+                    case 1:
+                        entry.read = false;
+                        break;
+                    case 2:
+                        entry.starred = true;
+                        break;
+                    case 3:
+                        entry.recent = true;
+                        break;
+                }
 
 
                 Regex _htmlRegex = new Regex("<.*?>");

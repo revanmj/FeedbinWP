@@ -89,7 +89,7 @@ namespace FeedbinWP
         }
 
         private async void Web_Click(Object sender, RoutedEventArgs e)
-        {;
+        {
             var uri = new Uri(entry.url);
             await Windows.System.Launcher.LaunchUriAsync(uri);
         }
@@ -121,19 +121,21 @@ namespace FeedbinWP
         {
             AppBarButton button = (AppBarButton)sender;
 
-            if (button.Label == "Star")
-            {
-                await FeedbinSyncSqlite.addSingleStar(entry);
+            Utils.ShowToastNotification("Operation failed");
 
-                button.Label = "Remove star";
-                button.Icon = new SymbolIcon(Symbol.UnFavorite);
-            } else if (button.Label == "Remove star")
-            {
-                await FeedbinSyncSqlite.removeSingleStar(entry);
+            //if (button.Label == "Star")
+            //{
+            //    await FeedbinSyncSqlite.addSingleStar(entry);
 
-                button.Label = "Star";
-                button.Icon = new SymbolIcon(Symbol.Favorite);
-            }
+            //    button.Label = "Remove star";
+            //    button.Icon = new SymbolIcon(Symbol.UnFavorite);
+            //} else if (button.Label == "Remove star")
+            //{
+            //    await FeedbinSyncSqlite.removeSingleStar(entry);
+
+            //    button.Label = "Star";
+            //    button.Icon = new SymbolIcon(Symbol.Favorite);
+            //}
         }
 
         private async void Read_Click(Object sender, RoutedEventArgs e)

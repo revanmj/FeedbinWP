@@ -193,10 +193,14 @@ namespace FeedbinWP
             progressbar.Text = "Marking all as read ...";
             await progressbar.ShowAsync();
 
-            await FeedbinSyncSqlite.markAllAsRead();
+            bool result = await FeedbinSyncSqlite.markAllAsRead();
 
             await progressbar.HideAsync();
 
+            if (!result)
+                Utils.ShowToastNotification("Operation failed");
+            else
+                loadData();
         }
 
         private void Sync_Click(Object sender, RoutedEventArgs e)
