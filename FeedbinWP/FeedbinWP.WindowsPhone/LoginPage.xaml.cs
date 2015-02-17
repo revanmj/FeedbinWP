@@ -50,7 +50,7 @@ namespace FeedbinWP
 
             await progressbar.ShowAsync();
 
-            bool result = await FeedbinSync.Login(username, password);
+            bool result = await FeedbinSyncSqlite.Login(username, password);
 
             await progressbar.HideAsync();
 

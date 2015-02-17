@@ -40,17 +40,10 @@ namespace FeedbinWP
             this.NavigationCacheMode = NavigationCacheMode.Required;
 
             settings = new SettingsData();
-
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            if (localSettings.Values["firstTime"] == null)
-            {
-                settings.setDefaults();
-                localSettings.Values["firstTime"] = true;
-            }
-
             settings.readSettings();
             
             data = new FeedbinData();
+
             db = new SQLiteAsyncConnection("feedbinData.db");
 
             if (settings.loggedIn)
@@ -84,14 +77,19 @@ namespace FeedbinWP
                 SyncButton.IsEnabled = false;
                 AddButton.IsEnabled = false;
                 LogInButton.Visibility = Visibility.Visible;
-                LogOutButton.Visibility = Visibility.Collapsed;
             }
             else if (settings.loggedIn)
             {
                 SyncButton.IsEnabled = true;
                 AddButton.IsEnabled = true;
                 LogInButton.Visibility = Visibility.Collapsed;
-                LogOutButton.Visibility = Visibility.Visible;
+
+                if (!settings.syncRecent)
+                    recentSection.Visibility = Visibility.Collapsed;
+                if (!settings.syncStarred)
+                    starredSection.Visibility = Visibility.Collapsed;
+
+                loadData();
             }
         }
 
@@ -101,17 +99,23 @@ namespace FeedbinWP
             progressbar.Text = "Loading data ...";
             await progressbar.ShowAsync();
             await db.CreateTableAsync<FeedbinEntry>();
+            List<FeedbinEntry> starredEntries = new List<FeedbinEntry>();
+            List<FeedbinEntry> recentEntries = new List<FeedbinEntry>();
 
             List<FeedbinEntry> unreadEntries = await db.Table<FeedbinEntry>().Where(x => x.read == false).ToListAsync();
-            List<FeedbinEntry> starredEntries = await db.Table<FeedbinEntry>().Where(x => x.starred == true).ToListAsync();
-            List<FeedbinEntry> recentEntries = await db.Table<FeedbinEntry>().Where(x => x.recent == true).ToListAsync();
-            List<FeedbinEntry> allEntries = await db.Table<FeedbinEntry>().Where(x => x.recent == false && x.starred == false).ToListAsync();
+            if (settings.syncStarred)
+                starredEntries = await db.Table<FeedbinEntry>().Where(x => x.starred == true).ToListAsync();
+            
+            if (settings.syncRecent)
+                recentEntries = await db.Table<FeedbinEntry>().Where(x => x.recent == true).ToListAsync();
+
+            List<FeedbinEntry> allEntries = await db.Table<FeedbinEntry>().ToListAsync();
 
             if (unreadEntries != null)
                 data.unreadEntries = new ObservableCollection<FeedbinEntry>(unreadEntries.OrderByDescending(f => f.published));
-            if (starredEntries != null)
+            if (starredEntries != null && settings.syncStarred)
                 data.starredEntries = new ObservableCollection<FeedbinEntry>(starredEntries.OrderByDescending(f => f.published));
-            if (recentEntries != null)
+            if (recentEntries != null && settings.syncRecent)
                 data.recentEntries = new ObservableCollection<FeedbinEntry>(recentEntries.OrderByDescending(f => f.published));
             if (allEntries != null)
                 data.allEntries = new ObservableCollection<FeedbinEntry>(allEntries.OrderByDescending(f => f.published));
@@ -130,34 +134,33 @@ namespace FeedbinWP
 
             await db.CreateTableAsync<FeedbinEntry>();
 
-            var vault = new Windows.Security.Credentials.PasswordVault();
-            var credentialList = vault.FindAllByResource("Feedbin");
-            PasswordCredential credential = credentialList[0];
-            credential.RetrievePassword();
             int result = 0;
+            await FeedbinSyncSqlite.resetReadStatus();
 
             if (settings.syncRead)
             {
-                int r = await FeedbinSyncSqlite.getEntriesSince(credential.UserName, credential.Password, settings.lastSync);
+                int r = await FeedbinSyncSqlite.getEntriesSince(DateTime.Now.AddDays(settings.daysToSync));
                 if (r == 1)
                     result = 1;
             }
             if (settings.syncRecent)
             {
-                int r = await FeedbinSyncSqlite.getRecentlyRead(credential.UserName, credential.Password);
+                int r = await FeedbinSyncSqlite.getRecentlyRead();
                 if (r == 1)
                     result = 1;
             }
             if (settings.syncStarred)
             {
-                int r = await FeedbinSyncSqlite.getStarredItems(credential.UserName, credential.Password);
+                int r = await FeedbinSyncSqlite.getStarredItems();
                 if (r == 1)
                     result = 1;
             }
 
-            int t = await FeedbinSyncSqlite.getUnreadItems(credential.UserName, credential.Password);
+            int t = await FeedbinSyncSqlite.getUnreadItems();
             if (t == 1)
                 result = 1;
+
+            await FeedbinSyncSqlite.cleanupDatabase(200);
 
             await progressbar.HideAsync();
 
@@ -180,6 +183,18 @@ namespace FeedbinWP
 
         }
 
+        private async void AllRead_Click(Object sender, RoutedEventArgs e)
+        {
+            StatusBarProgressIndicator progressbar = StatusBar.GetForCurrentView().ProgressIndicator;
+            progressbar.Text = "Marking all as read ...";
+            await progressbar.ShowAsync();
+
+            await FeedbinSyncSqlite.markAllAsRead();
+
+            await progressbar.HideAsync();
+
+        }
+
         private void Sync_Click(Object sender, RoutedEventArgs e)
         {
             syncData();
@@ -188,26 +203,14 @@ namespace FeedbinWP
         private void ArticleClick(Object sender, ItemClickEventArgs e)
         {
             FeedbinEntry item = e.ClickedItem as FeedbinEntry;
+
             if (item != null)
             {
+                if (!item.read)
+                    FeedbinSyncSqlite.markSingleAsRead(item);
+
                 Frame.Navigate(typeof(ArticlePage), item);
             }
-        }
-
-        private void LogOutButton_Click(object sender, RoutedEventArgs e)
-        {
-            settings.setDefaults();
-            SyncButton.IsEnabled = false;
-            AddButton.IsEnabled = false;
-            LogInButton.Visibility = Visibility.Visible;
-            LogOutButton.Visibility = Visibility.Collapsed;
-            this.DataContext = null;
-            var vault = new Windows.Security.Credentials.PasswordVault();
-            var credentialList = vault.FindAllByResource("Feedbin");
-            PasswordCredential credential = credentialList[0];
-            vault.Remove(credential);
-            db.DropTableAsync<FeedbinEntry>();
-            Frame.Navigate(typeof(LoginPage));
         }
 
     }

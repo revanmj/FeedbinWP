@@ -12,6 +12,7 @@ namespace FeedbinWP
         public bool syncRead { get; set; }
         public bool syncAtStart { get; set; }
         public bool loggedIn { get; set; }
+        public int daysToSync { get; set; }
         public DateTime lastSync { get; set; }
 
         public void readSettings()
@@ -22,6 +23,7 @@ namespace FeedbinWP
             syncRecent = (bool)localSettings.Values["syncRecent"];
             syncRead = (bool)localSettings.Values["syncRead"];
             loggedIn = (bool)localSettings.Values["loggedIn"];
+            daysToSync = (int)localSettings.Values["daysToSync"];
             lastSync = DateTime.Parse((String)localSettings.Values["lastSync"]);
         }
 
@@ -34,6 +36,7 @@ namespace FeedbinWP
             localSettings.Values["syncStarred"] = syncStarred;
             localSettings.Values["loggedIn"] = loggedIn;
             localSettings.Values["lastSync"] = lastSync.ToString();
+            localSettings.Values["daysToSync"] = daysToSync;
         }
 
         public void setToday()
@@ -43,11 +46,12 @@ namespace FeedbinWP
 
         public void setDefaults()
         {
-            syncAtStart = true;
+            syncAtStart = false;
             syncStarred = true;
             syncRecent = true;
             syncRead = false;
             loggedIn = false;
+            daysToSync = -3;
             setToday();
             saveSettings();
         }

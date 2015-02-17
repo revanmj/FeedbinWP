@@ -7,7 +7,6 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Phone.UI.Input;
-using Windows.Security.Credentials;
 using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
@@ -31,10 +30,13 @@ namespace FeedbinWP
         FeedbinEntry entry;
         DataTransferManager _dataTransferManager;
         String style;
+        StatusBarProgressIndicator progressbar;
 
         public ArticlePage()
         {
             this.InitializeComponent();
+
+            progressbar = StatusBar.GetForCurrentView().ProgressIndicator;
 
             HardwareButtons.BackPressed += HardwareButtons_BackPressed;
         }
@@ -48,12 +50,22 @@ namespace FeedbinWP
         {
             entry = e.Parameter as FeedbinEntry;
 
+            if (entry.starred)
+            {
+                starButton.Icon = new SymbolIcon(Symbol.UnFavorite);
+                starButton.Label = "Remove star";
+            } else
+            {
+                starButton.Label = "Star";
+                starButton.Icon = new SymbolIcon(Symbol.Favorite);
+            }
+
             style = "";
             StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(new System.Uri("ms-appx:///Assets/ReadingViewStyle.css"));
             using (StreamReader sRead = new StreamReader(await file.OpenStreamForReadAsync()))
                 style = await sRead.ReadToEndAsync();
 
-            webview.NavigateToString(style + "<h1>" + entry.title + "</h1></br>"+ entry.feed_id + "</br></br>" + entry.content);
+            webview.NavigateToString(style + "<h1>" + entry.title + "</h1>" + entry.author + "</br></br>" + entry.feed_id + "</br></br>" + entry.content);
 
             _dataTransferManager = DataTransferManager.GetForCurrentView();
             _dataTransferManager.DataRequested += OnDataRequested;
@@ -85,7 +97,7 @@ namespace FeedbinWP
 
             String newContent = await ReadabilityParser.parseViaReadability(entry.url);
             if (newContent != null)
-                webview.NavigateToString(style + "<h1>" + entry.title + "</h1></br>" + entry.feed_id + "</br></br>" + newContent);
+                webview.NavigateToString(style + "<h1>" + entry.title + "</h1>" + entry.author + "</br></br>" + entry.feed_id + "</br></br>" + newContent);
             else
             {
                 MessageDialog msg = new MessageDialog("Readability error.");
@@ -102,31 +114,38 @@ namespace FeedbinWP
 
         private async void Star_Click(Object sender, RoutedEventArgs e)
         {
-            var vault = new Windows.Security.Credentials.PasswordVault();
-            var credentialList = vault.FindAllByResource("Feedbin");
-            PasswordCredential credential = credentialList[0];
-            credential.RetrievePassword();
-
-            await FeedbinSync.addStar(credential.UserName, credential.Password, entry.id.ToString());
-
             AppBarButton button = (AppBarButton)sender;
-            button.Label = "Unstar";
-            BitmapIcon icon = new BitmapIcon();
-            icon.UriSource = new Uri("ms-appx:///Images/unstar.png");
-            button.Icon = icon;
+
+            if (button.Label == "Star")
+            {
+                await FeedbinSyncSqlite.addSingleStar(entry);
+
+                button.Label = "Remove star";
+                button.Icon = new SymbolIcon(Symbol.UnFavorite);
+            } else if (button.Label == "Remove star")
+            {
+                await FeedbinSyncSqlite.removeSingleStar(entry);
+
+                button.Label = "Star";
+                button.Icon = new SymbolIcon(Symbol.Favorite);
+            }
         }
 
         private async void Read_Click(Object sender, RoutedEventArgs e)
         {
-            var vault = new Windows.Security.Credentials.PasswordVault();
-            var credentialList = vault.FindAllByResource("Feedbin");
-            PasswordCredential credential = credentialList[0];
-            credential.RetrievePassword();
-
-            await FeedbinSync.markAsUnread(credential.UserName, credential.Password, entry.id.ToString());
-
             AppBarButton button = (AppBarButton)sender;
-            button.Label = "Mark as read";
+
+            if (button.Label == "Mark as unread")
+            {
+                await FeedbinSyncSqlite.markSingleAsUnread(entry);
+
+                button.Label = "Mark as read";
+            } else if (button.Label == "Mark as read")
+            {
+                await FeedbinSyncSqlite.markSingleAsRead(entry);
+
+                button.Label = "Mark as unread";
+            }
         }
 
         void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
@@ -145,6 +164,17 @@ namespace FeedbinWP
                     e.Handled = true;
                 }
             }
+        }
+
+        private async void webview_LoadCompleted(object sender, NavigationEventArgs e)
+        {
+            await progressbar.HideAsync();
+        }
+
+        private async void webview_FrameNavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
+        {
+            progressbar.Text = "";
+            await progressbar.ShowAsync();
         }
     }
 }

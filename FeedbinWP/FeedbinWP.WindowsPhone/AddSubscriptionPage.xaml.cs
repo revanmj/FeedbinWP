@@ -82,7 +82,7 @@ namespace FeedbinWP
             var credentialList = vault.FindAllByResource("Feedbin");
             PasswordCredential credential = credentialList[0];
             credential.RetrievePassword();
-            FeedbinSync.addSubscription(credential.UserName, credential.Password, url);
+            FeedbinSyncSqlite.addSubscription(url);
 
             // TODO: Perform work appropriate to your sharing scenario using
             //       this._shareOperation.Data, typically with additional information captured

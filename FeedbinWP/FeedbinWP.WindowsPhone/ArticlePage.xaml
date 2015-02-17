@@ -9,18 +9,14 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <WebView Name="webview" HorizontalAlignment="Left" Height="580" VerticalAlignment="Top" Width="400"/>
+        <WebView Name="webview" HorizontalAlignment="Left" Height="580" VerticalAlignment="Top" Width="400" LoadCompleted="webview_LoadCompleted" NavigationStarting="webview_FrameNavigationStarting"/>
 
     </Grid>
 
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton Label="Star" Click="Star_Click">
-                <AppBarButton.Icon>
-                    <BitmapIcon UriSource="Images/star.png"/>
-                </AppBarButton.Icon>
-            </AppBarButton>
-            <AppBarButton Label="Web" Icon="World" Click="Web_Click"/>
+            <AppBarButton Name="starButton" Label="Star" Click="Star_Click" Icon="Favorite"/>
+            <AppBarButton Label="Web" Icon="Globe" Click="Web_Click"/>
             <AppBarButton Label="Readability" Click="Readability_Click">
                 <AppBarButton.Icon>
                     <BitmapIcon UriSource="Images/readability.png"/>
@@ -33,7 +29,7 @@
             </AppBarButton>
 
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Mark as unread" Click="Read_Click"/>
+                <AppBarButton Name="markAsReadButton" Label="Mark as unread" Click="Read_Click"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

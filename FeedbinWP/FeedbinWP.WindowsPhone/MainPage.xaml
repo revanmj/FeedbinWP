@@ -42,7 +42,7 @@
                     </ListView>
                 </DataTemplate>
             </HubSection>
-            <HubSection Header="all">
+            <HubSection Name="allSection" Header="all">
                 <HubSection.HeaderTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" FontSize="24" Margin="0,0,0,0" />
@@ -68,7 +68,7 @@
                     </ListView>
                 </DataTemplate>
             </HubSection>
-            <HubSection Header="starred">
+            <HubSection Name="starredSection" Header="starred">
                 <HubSection.HeaderTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" FontSize="24" Margin="0,0,0,0" />
@@ -94,7 +94,7 @@
                     </ListView>
                 </DataTemplate>
             </HubSection>
-            <HubSection Header="recently read">
+            <HubSection Name="recentSection" Header="recently read">
                 <HubSection.HeaderTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" FontSize="24" Margin="0,0,0,0" />
@@ -124,12 +124,12 @@
     <Page.BottomAppBar>
         <CommandBar>
             <AppBarButton Name="LogInButton" Label="Log in" Icon="Permissions" Click="LogIn_Click"/>
+            <AppBarButton Name="AllReadButton" Label="Mark all as read" Icon="Accept" Click="AllRead_Click"/>
             <AppBarButton Name="SyncButton" Label="Sync" Icon="Sync" Click="Sync_Click"/>
             <AppBarButton Name="AddButton" Label="Add subscription" Icon="Add" Click="AddSubs_Click"/>
 
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="Settings" Click="Settings_Click"/>
-                <AppBarButton Name="LogOutButton" Label="Log out" Click="LogOutButton_Click"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

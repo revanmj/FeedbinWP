@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
+using Windows.Security.Credentials;
 
 namespace FeedbinWP
 {
@@ -27,9 +28,23 @@ namespace FeedbinWP
         static private String subscriptionsUrl = "subscriptions.json";
         static private String singleSubscriptionUrl = "subscriptions/"; // 3.json
 
-        public static async Task<int> getRecentlyRead(String username, String password)
+        static public async Task<bool> Login(String username, String password)
         {
-            String data_ids = await makeApiGetRequest(username, password, feedbinApiUrl + recentlyReadUrl);
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(username + ":" + password)));
+
+                HttpResponseMessage response = await client.GetAsync(new Uri(feedbinApiUrl + authUrl));
+                if (response.IsSuccessStatusCode)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+        public static async Task<int> getRecentlyRead()
+        {
+            String data_ids = await makeApiGetRequest(feedbinApiUrl + recentlyReadUrl);
             if (data_ids != null)
             {
                 String ids = "";
@@ -54,7 +69,7 @@ namespace FeedbinWP
                 {
                     if (ids.LastIndexOf(",") == ids.Length - 1)
                         ids = ids.Substring(0, ids.Length - 2);
-                    String entries_json = await getEntries(username, password, ids);
+                    String entries_json = await getEntries(ids);
                     ObservableCollection<FeedbinEntry> list = parseEntriesJson(entries_json);
                     await db.InsertAllAsync(list);
                 }
@@ -65,9 +80,9 @@ namespace FeedbinWP
 
         }
 
-        public static async Task<int> getUnreadItems(String username, String password)
+        public static async Task<int> getUnreadItems()
         {
-            String data_ids = await makeApiGetRequest(username, password, feedbinApiUrl + unreadUrl);
+            String data_ids = await makeApiGetRequest(feedbinApiUrl + unreadUrl);
             if (data_ids != null)
             {
                 String ids = "";
@@ -93,7 +108,7 @@ namespace FeedbinWP
                 {
                     if (ids.LastIndexOf(",") == ids.Length - 1)
                         ids = ids.Substring(0, ids.Length - 2);
-                    String entries_json = await getEntries(username, password, ids);
+                    String entries_json = await getEntries(ids);
                     ObservableCollection<FeedbinEntry> list = parseEntriesJson(entries_json);
                     await db.InsertAllAsync(list);
                 }
@@ -104,9 +119,9 @@ namespace FeedbinWP
 
         }
 
-        public static async Task<int> getStarredItems(String username, String password)
+        public static async Task<int> getStarredItems()
         {
-            String data_ids = await makeApiGetRequest(username, password, feedbinApiUrl + starredUrl);
+            String data_ids = await makeApiGetRequest(feedbinApiUrl + starredUrl);
             if (data_ids != null)
             {
                 String ids = "";
@@ -132,7 +147,7 @@ namespace FeedbinWP
                 {
                     if (ids.LastIndexOf(",") == ids.Length - 1)
                         ids = ids.Substring(0, ids.Length - 2);
-                    String entries_json = await getEntries(username, password, ids);
+                    String entries_json = await getEntries(ids);
                     ObservableCollection<FeedbinEntry> list = parseEntriesJson(entries_json);
                     await db.InsertAllAsync(list);
                 }
@@ -143,9 +158,9 @@ namespace FeedbinWP
 
         }
 
-        public static async Task<int> getEntriesSince(String username, String password, DateTime since)
+        public static async Task<int> getEntriesSince(DateTime since)
         {
-            String data = await makeApiGetRequest(username, password, feedbinApiUrl + entriesSinceUrl + since.ToString("o"));
+            String data = await makeApiGetRequest(feedbinApiUrl + entriesSinceUrl + since.ToString("o"));
             ObservableCollection<FeedbinEntry> entries = parseEntriesJson(data);
             if (entries.Count > 0)
             {
@@ -156,10 +171,147 @@ namespace FeedbinWP
             return 0;
         }
 
-        public static async Task<String> getEntries(String username, String password, String ids)
+        public static async Task<String> getEntries(String ids)
         {
-            String data_entries = await makeApiGetRequest(username, password, feedbinApiUrl + entriesByIdUrl + ids);
+            String data_entries = await makeApiGetRequest(feedbinApiUrl + entriesByIdUrl + ids);
             return data_entries;
+        }
+
+        public static async Task<bool> markSingleAsRead(FeedbinEntry entry)
+        {
+            StringContent message = new StringContent("{\"unread_entries\": [" + entry.id.ToString() + "]}");
+            String data = await makeApiPostRequest(feedbinApiUrl + unreadDeleteUrl, message);
+
+            StringContent msg = new StringContent("{\"recently_read_entries\": [" + entry.id.ToString() + "]}");
+            String data_recentlyRead = await makeApiPostRequest(feedbinApiUrl + recentlyReadUrl, msg);
+
+            entry.read = true;
+            entry.recent = true;
+
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+            await db.UpdateAsync(entry);
+
+            if (data != null)
+                return true;
+            return false;
+        }
+
+        public static async Task<bool> markSingleAsUnread(FeedbinEntry entry)
+        {
+            StringContent message = new StringContent("{\"unread_entries\": [" + entry.id.ToString() + "]}");
+            String data = await makeApiPostRequest(feedbinApiUrl + unreadUrl, message);
+
+            entry.read = false;
+
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+            await db.UpdateAsync(entry);
+
+            if (data != null)
+                return true;
+            return false;
+        }
+
+        public static async Task<bool> markAllAsRead()
+        {
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+            List<FeedbinEntry> list = await db.Table<FeedbinEntry>().Where(x => x.read == false).ToListAsync();
+
+            String ids = "";
+            for (int i = 0; i < list.Count; i++)
+            {
+                ids += list[i].id.ToString();
+                if (i < list.Count - 1)
+                    ids += ",";
+                list[i].read = true;
+            }
+            
+            StringContent message = new StringContent("{\"unread_entries\": [" + ids + "]}");
+            String data = await makeApiPostRequest(feedbinApiUrl + unreadDeleteUrl, message);
+            
+            await db.UpdateAllAsync(list);
+
+            if (data != null)
+                return true;
+            return false;
+        }
+
+        public static async Task<bool> addSingleStar(FeedbinEntry entry)
+        {
+            StringContent message = new StringContent("{\"starred_entries\": [" + entry.id.ToString() + "]}");
+            String data = await makeApiPostRequest(feedbinApiUrl + starredUrl, message);
+
+            entry.starred = true;
+
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+            await db.UpdateAsync(entry);
+
+            if (data != null)
+                return true;
+            return false;
+        }
+
+        public static async Task<bool> removeSingleStar(FeedbinEntry entry)
+        {
+            StringContent message = new StringContent("{\"starred_entries\": [" + entry.id.ToString() + "]}");
+            String data = await makeApiPostRequest(feedbinApiUrl + starredDeleteUrl, message);
+
+            entry.starred = false;
+
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+            await db.UpdateAsync(entry);
+
+            if (data != null)
+                return true;
+            return false;
+        }
+
+        static public async Task<bool> addSubscription(String url)
+        {
+            StringContent json = new StringContent("{\"feed_url\": \"" + url + "\"}");
+            String data = await makeApiPostRequest(feedbinApiUrl + subscriptionsUrl, json);
+            if (data != null)
+                return true;
+            return false;
+        }
+
+        static public async Task<bool> updateSubscription(int feed_id, String title)
+        {
+            StringContent message = new StringContent("{\"title\": \"" + title + "\"}");
+            String data = await makeApiPostRequest(feedbinApiUrl + singleSubscriptionUrl + "/" + feed_id + "/update.json", message);
+            if (data != null)
+                return true;
+            return false;
+        }
+
+        static public async Task<bool> deleteSubscription(int feed_id)
+        {
+            bool result = await makeApiDeleteRequest(feedbinApiUrl + singleSubscriptionUrl + feed_id + ".json");
+            return result;
+        }
+
+        public static async Task<int> cleanupDatabase(int entriesToKeep)
+        {
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+
+            List<FeedbinEntry> list = await db.Table<FeedbinEntry>().OrderByDescending(x => x.published).ToListAsync();
+
+            if (list.Count > entriesToKeep)
+                for (int i = list.Count; i > entriesToKeep; i--)
+                    await db.DeleteAsync(list[i]);
+            return 1;
+        }
+
+        public static async Task<int> resetReadStatus()
+        {
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+            List<FeedbinEntry> unreadEntries = await db.Table<FeedbinEntry>().Where(x => x.read == false).ToListAsync();
+            for (int i = 0; i < unreadEntries.Count; i++)
+            {
+                unreadEntries[i].read = true;
+            }
+            await db.UpdateAllAsync(unreadEntries);
+
+            return 1;
         }
 
         static private ObservableCollection<FeedbinEntry> parseEntriesJson(String data)
@@ -197,11 +349,16 @@ namespace FeedbinWP
             return entries;
         }
 
-        static private async Task<bool> makeApiDeleteRequest(String username, String password, String url)
+        static private async Task<bool> makeApiDeleteRequest(String url)
         {
             using (var client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(username + ":" + password)));
+                var vault = new PasswordVault();
+                var credentialList = vault.FindAllByResource("Feedbin");
+                PasswordCredential credential = credentialList[0];
+                credential.RetrievePassword();
+
+                client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(credential.UserName + ":" + credential.Password)));
 
                 var response = await client.DeleteAsync(new Uri(feedbinApiUrl + subscriptionsUrl));
 
@@ -214,11 +371,16 @@ namespace FeedbinWP
             }
         }
 
-        static private async Task<String> makeApiPostRequest(String username, String password, String url, StringContent message)
+        static private async Task<String> makeApiPostRequest(String url, StringContent message)
         {
             using (var client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(username + ":" + password)));
+                var vault = new PasswordVault();
+                var credentialList = vault.FindAllByResource("Feedbin");
+                PasswordCredential credential = credentialList[0];
+                credential.RetrievePassword();
+
+                client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(credential.UserName + ":" + credential.Password)));
 
 
                 message.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
@@ -235,11 +397,16 @@ namespace FeedbinWP
             }
         }
 
-        static private async Task<String> makeApiGetRequest(String username, String password, String url)
+        static private async Task<String> makeApiGetRequest(String url)
         {
             using (var client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(username + ":" + password)));
+                var vault = new PasswordVault();
+                var credentialList = vault.FindAllByResource("Feedbin");
+                PasswordCredential credential = credentialList[0];
+                credential.RetrievePassword();
+
+                client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(credential.UserName + ":" + credential.Password)));
 
                 HttpResponseMessage response = await client.GetAsync(new Uri(url));
 

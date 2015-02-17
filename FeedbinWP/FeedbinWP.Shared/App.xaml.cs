@@ -8,6 +8,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Phone.UI.Input;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -38,28 +39,7 @@ namespace FeedbinWP
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
-
-#if WINDOWS_PHONE_APP
-            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-#endif
         }
-
-#if WINDOWS_PHONE_APP
-        private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
-        {
-            Frame frame = Window.Current.Content as Frame;
-            if (frame == null)
-            {
-                return;
-            }
-
-            if (frame.CanGoBack)
-            {
-                frame.GoBack();
-                e.Handled = true;
-            }
-        }
-#endif
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -119,6 +99,14 @@ namespace FeedbinWP
                 // parameter
 
                 SettingsData settings = new SettingsData();
+
+                ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                if (localSettings.Values["firstTime"] == null)
+                {
+                    settings.setDefaults();
+                    localSettings.Values["firstTime"] = true;
+                }
+
                 settings.readSettings();
 
                 if (!settings.loggedIn)

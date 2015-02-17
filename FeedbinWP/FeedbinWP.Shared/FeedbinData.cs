@@ -26,6 +26,7 @@ namespace FeedbinWP
             this.allEntries = all;
             this.unreadEntries = new ObservableCollection<FeedbinEntry>(allEntries.Where(a => a.read == false));
             this.starredEntries = new ObservableCollection<FeedbinEntry>(allEntries.Where(a => a.starred == true));
+            this.recentEntries = new ObservableCollection<FeedbinEntry>(allEntries.Where(a => a.recent == true));
         }
     }
 }
