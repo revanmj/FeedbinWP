@@ -2,32 +2,45 @@
     body {
         background-color: black !important;
         color: white !important;
-        font-size: large !important;
-        margin: 20px;
+        font-size: medium !important;
+        margin: 10px;
+        height: 100%;
+        overflow-x: scroll;
+        position: relative;
+        width: 92%;
+        z-index: 0;
     }
     p {
         font-family: "Segoe UI", Verdana, Sans-serif !important;
         color: white !important;
-        font-size: large !important;
+        font-size: medium !important;
     }
     h1 {
         font-family: "Segoe UI", Verdana, Sans-serif !important;
         color: white !important;
-        font-size: x-large !important;
+        font-size: large !important;
     }
     i {
         font-family: "Segoe UI", Verdana, Sans-serif !important;
         color: white !important;
-        font-size: large !important;
+        font-size: medium !important;
     }
     span {
         font-family: "Segoe UI", Verdana, Sans-serif !important;
         color: white !important;
-        font-size: large !important;
+        font-size: medium !important;
     }
     img {
         display: block !important;
         margin-left: auto !important;
         margin-right: auto !important;
     } 
+    img,p.object,iframe {
+        max-width:90%;
+        height:auto;
+    }
 </style>
+
+<head>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=0"/>
+</head>
