@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Linq;
 
-namespace FeedbinWP
+namespace FeedbinWP.Data
 {
     class FeedbinData
     {

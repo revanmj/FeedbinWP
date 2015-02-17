@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FeedbinWP
+namespace FeedbinWP.Data
 {
     class FeedbinSubscription
     {

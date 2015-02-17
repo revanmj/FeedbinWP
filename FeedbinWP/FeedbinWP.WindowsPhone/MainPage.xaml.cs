@@ -19,6 +19,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using FeedbinWP.Data;
+using FeedbinWP.Services;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -206,9 +208,6 @@ namespace FeedbinWP
 
             if (item != null)
             {
-                if (!item.read)
-                    FeedbinSyncSqlite.markSingleAsRead(item);
-
                 Frame.Navigate(typeof(ArticlePage), item);
             }
         }

@@ -16,6 +16,8 @@ using System.Net.Http;
 using System.Text;
 using Windows.UI.ViewManagement;
 using Windows.UI.Popups;
+using FeedbinWP.Services;
+using FeedbinWP.Data;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 

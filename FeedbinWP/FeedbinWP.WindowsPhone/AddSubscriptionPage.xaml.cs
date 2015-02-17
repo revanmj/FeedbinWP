@@ -18,6 +18,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using FeedbinWP.Services;
 
 // The Share Target Contract item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 

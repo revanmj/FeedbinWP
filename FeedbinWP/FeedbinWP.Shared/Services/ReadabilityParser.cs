@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Data.Json;
 
-namespace FeedbinWP
+namespace FeedbinWP.Services
 {
     class ReadabilityParser
     {

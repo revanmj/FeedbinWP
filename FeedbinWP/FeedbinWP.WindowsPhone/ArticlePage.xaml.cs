@@ -17,6 +17,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using FeedbinWP.Data;
+using FeedbinWP.Services;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -59,6 +61,9 @@ namespace FeedbinWP
                 starButton.Label = "Star";
                 starButton.Icon = new SymbolIcon(Symbol.Favorite);
             }
+
+            if (!entry.read)
+                FeedbinSyncSqlite.markSingleAsRead(entry);
 
             style = "";
             StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(new System.Uri("ms-appx:///Assets/ReadingViewStyle.css"));

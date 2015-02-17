@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Windows.Storage;
 
-namespace FeedbinWP
+namespace FeedbinWP.Data
 {
     class SettingsData
     {

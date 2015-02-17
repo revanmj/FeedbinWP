@@ -40,6 +40,7 @@
             <TextBlock HorizontalAlignment="Left" Margin="0,294,0,0" TextWrapping="Wrap" Text="Logged in as:" VerticalAlignment="Top" FontSize="24"/>
             <TextBlock Name="loggedEmail" HorizontalAlignment="Left" Margin="0,328,0,0" TextWrapping="Wrap" Text="someone@example.com" VerticalAlignment="Top" FontSize="24"/>
             <Button Content="Log out" HorizontalAlignment="Left" Margin="0,368,0,0" VerticalAlignment="Top" Width="362" Click="Button_Click"/>
+            <Button Content="Clear data" HorizontalAlignment="Left" Margin="0,424,0,0" VerticalAlignment="Top" Width="362" Click="Button_Click_1"/>
         </Grid>
     </Grid>
 </Page>

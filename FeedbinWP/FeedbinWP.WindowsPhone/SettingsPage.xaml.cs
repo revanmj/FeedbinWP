@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using FeedbinWP.Data;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -166,6 +167,12 @@ namespace FeedbinWP
                 rootFrame.GoBack();
                 e.Handled = true;
             }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+            db.DropTableAsync<FeedbinEntry>();
         }
     }
 }

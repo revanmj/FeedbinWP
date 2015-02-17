@@ -10,8 +10,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using Windows.Security.Credentials;
+using FeedbinWP.Data;
 
-namespace FeedbinWP
+namespace FeedbinWP.Services
 {
     class FeedbinSyncSqlite
     {
@@ -341,8 +342,9 @@ namespace FeedbinWP
                                                       values[3],
                                                       DateTime.Parse(values[4]));
 
+
                 Regex _htmlRegex = new Regex("<.*?>");
-                entry.summary = _htmlRegex.Replace(entry.content, string.Empty).Replace("\n", "").Replace("\r", "");
+                entry.summary = _htmlRegex.Replace(entry.content, string.Empty).Trim();//.Replace("\n", "").Replace("\r", "");
 
                 entries.Add(entry);
             }

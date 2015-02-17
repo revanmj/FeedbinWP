@@ -5,8 +5,14 @@
     xmlns:local="using:FeedbinWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:valueconverter="using:FeedbinWP.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
+    <Page.Resources>
+        <valueconverter:UnreadToForegroundConverter x:Key="UnreadToColor"/>
+        <valueconverter:UnreadSubToForegroundConverter x:Key="UnreadSubToColor"/>
+    </Page.Resources>
 
     <Grid>
         <Hub Name="MainHub" Header="FeedbinWP">
@@ -34,7 +40,8 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0,0,0,8">
-                                    <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}"             TextTrimming="CharacterEllipsis"
+              FontSize="20"/>
                                     <TextBlock Text="{Binding summary}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" MaxLines="2"/>
                                 </StackPanel>
                             </DataTemplate>
@@ -60,8 +67,12 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0,0,0,8">
-                                    <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}" TextTrimming="CharacterEllipsis"/>
-                                    <TextBlock Text="{Binding summary}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" MaxLines="2"/>
+                                    <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}" TextTrimming="CharacterEllipsis"
+              FontSize="20"
+              Foreground="{Binding read, 
+                   Converter={StaticResource UnreadToColor}}"/>
+                                    <TextBlock Text="{Binding summary}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis"
+                                               Foreground="{Binding read, Converter={StaticResource UnreadSubToColor}}" MaxLines="2"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -86,7 +97,7 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0,0,0,8">
-                                    <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}" TextTrimming="CharacterEllipsis"        FontSize="20"/>
                                     <TextBlock Text="{Binding summary}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" MaxLines="2"/>
                                 </StackPanel>
                             </DataTemplate>
@@ -111,7 +122,8 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0,0,0,8">
-                                    <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding title}" Style="{ThemeResource ListViewItemTextBlockStyle}" TextTrimming="CharacterEllipsis"
+              FontSize="20"/>
                                     <TextBlock Text="{Binding summary}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" MaxLines="2"/>
                                 </StackPanel>
                             </DataTemplate>

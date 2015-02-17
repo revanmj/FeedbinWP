@@ -15,12 +15,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)FeedbinData.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)FeedbinEntry.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)FeedbinSubscription.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)FeedbinSyncSqlite.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ReadabilityParser.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SettingsData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToColor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\FeedbinData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\FeedbinEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\FeedbinSubscription.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\SettingsData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\TestClass.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\FeedbinSyncSqlite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ReadabilityParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SQLite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SQLiteAsync.cs" />
   </ItemGroup>
