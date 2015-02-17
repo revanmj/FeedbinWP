@@ -31,7 +31,11 @@ namespace FeedbinWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        FeedbinData data;
+        ObservableRangeCollection<FeedbinEntry> allEntries;
+        ObservableRangeCollection<FeedbinEntry> unreadEntries;
+        ObservableRangeCollection<FeedbinEntry> starredEntries;
+        ObservableRangeCollection<FeedbinEntry> recentEntries;
+
         SettingsData settings;
         SQLiteAsyncConnection db;
 
@@ -43,8 +47,16 @@ namespace FeedbinWP
 
             settings = new SettingsData();
             settings.readSettings();
-            
-            data = new FeedbinData();
+
+            allEntries = new ObservableRangeCollection<FeedbinEntry>();
+            unreadEntries = new ObservableRangeCollection<FeedbinEntry>();
+            starredEntries = new ObservableRangeCollection<FeedbinEntry>();
+            recentEntries = new ObservableRangeCollection<FeedbinEntry>();
+
+            allSection.DataContext = allEntries;
+            recentSection.DataContext = recentEntries;
+            starredSection.DataContext = starredEntries;
+            unreadSection.DataContext = unreadEntries;
 
             db = new SQLiteAsyncConnection("feedbinData.db");
 
@@ -101,29 +113,19 @@ namespace FeedbinWP
             progressbar.Text = "Loading data ...";
             await progressbar.ShowAsync();
             await db.CreateTableAsync<FeedbinEntry>();
-            List<FeedbinEntry> starredEntries = new List<FeedbinEntry>();
-            List<FeedbinEntry> recentEntries = new List<FeedbinEntry>();
 
-            List<FeedbinEntry> unreadEntries = await db.Table<FeedbinEntry>().Where(x => x.read == false).ToListAsync();
+            allEntries.ReplaceRange(await db.Table<FeedbinEntry>().OrderByDescending(x => x.published).ToListAsync());
+            unreadEntries.ReplaceRange(allEntries.Where(x => x.read == false).OrderByDescending(x => x.published).ToList());
+
             if (settings.syncStarred)
-                starredEntries = await db.Table<FeedbinEntry>().Where(x => x.starred == true).ToListAsync();
-            
+            {
+                starredEntries.ReplaceRange(allEntries.Where(x => x.starred == true).OrderByDescending(x => x.published).ToList());
+            }
+
             if (settings.syncRecent)
-                recentEntries = await db.Table<FeedbinEntry>().Where(x => x.recent == true).ToListAsync();
-
-            List<FeedbinEntry> allEntries = await db.Table<FeedbinEntry>().ToListAsync();
-
-            if (unreadEntries != null)
-                data.unreadEntries = new ObservableCollection<FeedbinEntry>(unreadEntries.OrderByDescending(f => f.published));
-            if (starredEntries != null && settings.syncStarred)
-                data.starredEntries = new ObservableCollection<FeedbinEntry>(starredEntries.OrderByDescending(f => f.published));
-            if (recentEntries != null && settings.syncRecent)
-                data.recentEntries = new ObservableCollection<FeedbinEntry>(recentEntries.OrderByDescending(f => f.published));
-            if (allEntries != null)
-                data.allEntries = new ObservableCollection<FeedbinEntry>(allEntries.OrderByDescending(f => f.published));
-
-            this.DataContext = null;
-            this.DataContext = data;
+            {
+                recentEntries.ReplaceRange(allEntries.Where(x => x.recent == true).OrderByDescending(x => x.published).ToList());
+            }
 
             await progressbar.HideAsync();
         }

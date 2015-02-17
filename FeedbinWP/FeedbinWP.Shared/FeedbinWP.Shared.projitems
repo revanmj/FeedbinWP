@@ -16,11 +16,10 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToColor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\FeedbinData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\FeedbinEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\FeedbinSubscription.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ObservableRangeCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\SettingsData.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\TestClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FeedbinSyncSqlite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ReadabilityParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SQLite.cs" />

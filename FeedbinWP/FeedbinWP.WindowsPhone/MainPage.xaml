@@ -23,7 +23,7 @@
             </Hub.HeaderTemplate>
 
             <!-- Hub sections -->
-            <HubSection Header="unread" Name="unread">
+            <HubSection Header="unread" Name="unreadSection">
                 <HubSection.HeaderTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" FontSize="24" Margin="0,0,0,0" />
@@ -34,8 +34,8 @@
                         SelectionMode="None"
                         IsItemClickEnabled="True"
                         ItemClick="ArticleClick"
-                        ItemsSource="{Binding unreadEntries}"
                         Margin="0,-24,0,0"
+                        ItemsSource="{Binding}"
                         ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -57,12 +57,11 @@
                 </HubSection.HeaderTemplate>
                 <DataTemplate>
                     <ListView 
-                        Name="allList"
                         SelectionMode="None"
                         IsItemClickEnabled="True"
                         ItemClick="ArticleClick"
-                        ItemsSource="{Binding allEntries}"
                         Margin="0,-24,0,0"
+                        ItemsSource="{Binding}"
                         ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -87,12 +86,11 @@
                 </HubSection.HeaderTemplate>
                 <DataTemplate>
                     <ListView 
-                        Name="starredList"
                         SelectionMode="None"
                         IsItemClickEnabled="True"
                         ItemClick="ArticleClick"
-                        ItemsSource="{Binding starredEntries}"
                         Margin="0,-24,0,0"
+                        ItemsSource="{Binding}"
                         ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -117,8 +115,7 @@
                         SelectionMode="None"
                         IsItemClickEnabled="True"
                         ItemClick="ArticleClick"
-                        ItemsSource="{Binding recentEntries}"
-                        ContinuumNavigationTransitionInfo.ExitElementContainer="True" Margin="0,-24,0,0">
+ContinuumNavigationTransitionInfo.ExitElementContainer="True" Margin="0,-24,0,0" ItemsSource="{Binding}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0,0,0,8">
