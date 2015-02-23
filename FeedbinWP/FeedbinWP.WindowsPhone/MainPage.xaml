@@ -23,7 +23,7 @@
             </Hub.HeaderTemplate>
 
             <!-- Hub sections -->
-            <HubSection Header="unread" Name="unreadSection">
+            <HubSection x:Uid="unreadItems" Header="" Name="unreadSection">
                 <HubSection.HeaderTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" FontSize="24" Margin="0,0,0,0" />
@@ -49,7 +49,7 @@
                     </ListView>
                 </DataTemplate>
             </HubSection>
-            <HubSection Name="allSection" Header="all">
+            <HubSection Name="allSection" x:Uid="allItems" Header="">
                 <HubSection.HeaderTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" FontSize="24" Margin="0,0,0,0" />
@@ -78,7 +78,7 @@
                     </ListView>
                 </DataTemplate>
             </HubSection>
-            <HubSection Name="starredSection" Header="starred">
+            <HubSection Name="starredSection" x:Uid="starredItems" Header="">
                 <HubSection.HeaderTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" FontSize="24" Margin="0,0,0,0" />
@@ -103,7 +103,7 @@
                     </ListView>
                 </DataTemplate>
             </HubSection>
-            <HubSection Name="recentSection" Header="recently read">
+            <HubSection Name="recentSection" x:Uid="recentItems" Header="">
                 <HubSection.HeaderTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" FontSize="24" Margin="0,0,0,0" />
@@ -132,13 +132,13 @@ ContinuumNavigationTransitionInfo.ExitElementContainer="True" Margin="0,-24,0,0"
     </Grid>
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton Name="LogInButton" Label="Log in" Icon="Permissions" Click="LogIn_Click"/>
+            <AppBarButton Name="LogInButton" x:Uid="logIn" Label="" Icon="Permissions" Click="LogIn_Click"/>
             <AppBarButton Name="AllReadButton" Label="Mark all as read" Icon="Accept" Click="AllRead_Click"/>
-            <AppBarButton Name="SyncButton" Label="Sync" Icon="Sync" Click="Sync_Click"/>
+            <AppBarButton Name="SyncButton" x:Uid="sync" Label="" Icon="Sync" Click="Sync_Click"/>
             <AppBarButton Name="AddButton" Label="Add subscription" Icon="Add" Click="AddSubs_Click"/>
 
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Settings" Click="Settings_Click"/>
+                <AppBarButton x:Uid="settings" Label="" Click="Settings_Click"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using FeedbinWP.Data;
 using FeedbinWP.Services;
+using Windows.ApplicationModel.Resources;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -33,12 +34,15 @@ namespace FeedbinWP
         DataTransferManager _dataTransferManager;
         String style;
         StatusBarProgressIndicator progressbar;
+        ResourceLoader loader;
 
         public ArticlePage()
         {
             this.InitializeComponent();
 
             progressbar = StatusBar.GetForCurrentView().ProgressIndicator;
+
+            loader = new ResourceLoader();
 
             HardwareButtons.BackPressed += HardwareButtons_BackPressed;
         }
@@ -55,10 +59,10 @@ namespace FeedbinWP
             if (entry.starred)
             {
                 starButton.Icon = new SymbolIcon(Symbol.UnFavorite);
-                starButton.Label = "Remove star";
+                starButton.Label = loader.GetString("removeStar");
             } else
             {
-                starButton.Label = "Star";
+                starButton.Label = loader.GetString("addStar"); ;
                 starButton.Icon = new SymbolIcon(Symbol.Favorite);
             }
 
