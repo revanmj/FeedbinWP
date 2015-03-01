@@ -74,7 +74,7 @@ namespace FeedbinWP
             using (StreamReader sRead = new StreamReader(await file.OpenStreamForReadAsync()))
                 style = await sRead.ReadToEndAsync();
 
-            webview.NavigateToString(style + "<h1>" + entry.title + "</h1>" + entry.author + "</br>" + entry.feed_name + "</br>"+ entry.published.ToString("dd.MM.yyyy HH:mm") + "</br></br>" + entry.content);
+            webview.NavigateToString(style + "<h1>" + entry.title + "</h1>" + entry.author + "</br>" + entry.feed_name + "</br>"+ entry.published.ToLocalTime().ToString("dd.MM.yyyy HH:mm") + "</br></br>" + entry.content);
 
             _dataTransferManager = DataTransferManager.GetForCurrentView();
             _dataTransferManager.DataRequested += OnDataRequested;

@@ -185,14 +185,17 @@ namespace FeedbinWP.Services
             StringContent msg = new StringContent("{\"recently_read_entries\": [" + entry.id.ToString() + "]}");
             String data_recentlyRead = await makeApiPostRequest(feedbinApiUrl + recentlyReadUrl, msg);
 
-            entry.read = true;
-            entry.recent = true;
-
-            SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
-            await db.UpdateAsync(entry);
-
             if (data != null)
+            {
+                entry.read = true;
+                entry.recent = true;
+
+                SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+                await db.UpdateAsync(entry);
+
                 return true;
+            }
+
             return false;
         }
 
@@ -201,13 +204,15 @@ namespace FeedbinWP.Services
             StringContent message = new StringContent("{\"unread_entries\": [" + entry.id.ToString() + "]}");
             String data = await makeApiPostRequest(feedbinApiUrl + unreadUrl, message);
 
-            entry.read = false;
-
-            SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
-            await db.UpdateAsync(entry);
-
             if (data != null)
+            {
+                entry.read = false;
+
+                SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+                await db.UpdateAsync(entry);
+
                 return true;
+            } 
             return false;
         }
 
@@ -227,11 +232,14 @@ namespace FeedbinWP.Services
             
             StringContent message = new StringContent("{\"unread_entries\": [" + ids + "]}");
             String data = await makeApiPostRequest(feedbinApiUrl + unreadDeleteUrl, message);
-            
-            await db.UpdateAllAsync(list);
+
+
 
             if (data != null)
+            {
+                await db.UpdateAllAsync(list);
                 return true;
+            }
             return false;
         }
 
@@ -240,13 +248,15 @@ namespace FeedbinWP.Services
             StringContent message = new StringContent("{\"starred_entries\": [" + entry.id.ToString() + "]}");
             String data = await makeApiPostRequest(feedbinApiUrl + starredUrl, message);
 
-            entry.starred = true;
-
-            SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
-            await db.UpdateAsync(entry);
-
             if (data != null)
+            {
+                entry.starred = true;
+
+                SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+                await db.UpdateAsync(entry);
+
                 return true;
+            }
             return false;
         }
 
@@ -255,13 +265,15 @@ namespace FeedbinWP.Services
             StringContent message = new StringContent("{\"starred_entries\": [" + entry.id.ToString() + "]}");
             String data = await makeApiPostRequest(feedbinApiUrl + starredDeleteUrl, message);
 
-            entry.starred = false;
-
-            SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
-            await db.UpdateAsync(entry);
-
             if (data != null)
+            {
+                entry.starred = false;
+
+                SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+                await db.UpdateAsync(entry);
+
                 return true;
+            }
             return false;
         }
 
