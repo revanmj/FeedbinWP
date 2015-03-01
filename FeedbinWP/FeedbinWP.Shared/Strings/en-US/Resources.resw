@@ -117,40 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="allItems" xml:space="preserve">
+  <data name="allItems.Header" xml:space="preserve">
     <value>all</value>
   </data>
-  <data name="cancel" xml:space="preserve">
+  <data name="cancel.Label" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="logIn" xml:space="preserve">
+  <data name="logIn.Label" xml:space="preserve">
     <value>Log in</value>
   </data>
-  <data name="logOut" xml:space="preserve">
+  <data name="logOut.Label" xml:space="preserve">
     <value>Log out</value>
   </data>
-  <data name="markAsRead" xml:space="preserve">
+  <data name="markAsRead.Label" xml:space="preserve">
     <value>Mark as read</value>
   </data>
-  <data name="markAsUnread" xml:space="preserve">
+  <data name="markAsUnread.Label" xml:space="preserve">
     <value>Mark as unread</value>
   </data>
-  <data name="parseReadability" xml:space="preserve">
+  <data name="parseReadability.Label" xml:space="preserve">
     <value>Loading full article ...</value>
   </data>
-  <data name="recentItems" xml:space="preserve">
+  <data name="recentItems.Header" xml:space="preserve">
     <value>recently read</value>
   </data>
-  <data name="settings" xml:space="preserve">
+  <data name="settings.Label" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="share" xml:space="preserve">
+  <data name="share.Label" xml:space="preserve">
     <value>Share</value>
   </data>
-  <data name="starredItems" xml:space="preserve">
+  <data name="starredItems.Header" xml:space="preserve">
     <value>starred</value>
   </data>
-  <data name="sync" xml:space="preserve">
+  <data name="sync.Label" xml:space="preserve">
     <value>Sync</value>
   </data>
   <data name="syncingArt" xml:space="preserve">
@@ -159,7 +159,7 @@
   <data name="syncingSub" xml:space="preserve">
     <value>Syncing subscriptions ...</value>
   </data>
-  <data name="unreadItems" xml:space="preserve">
+  <data name="unreadItems.Header" xml:space="preserve">
     <value>unread</value>
   </data>
 </root>

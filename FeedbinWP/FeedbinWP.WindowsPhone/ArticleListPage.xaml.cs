@@ -29,7 +29,7 @@ namespace FeedbinWP
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class ArticleListPage : Page
     {
         ObservableRangeCollection<FeedbinEntry> allEntries;
         ObservableRangeCollection<FeedbinEntry> unreadEntries;
@@ -39,7 +39,7 @@ namespace FeedbinWP
         SettingsData settings;
         SQLiteAsyncConnection db;
 
-        public MainPage()
+        public ArticleListPage()
         {
             this.InitializeComponent();
 
@@ -137,9 +137,12 @@ namespace FeedbinWP
             await progressbar.ShowAsync();
 
             await db.CreateTableAsync<FeedbinEntry>();
+            await db.CreateTableAsync<FeedbinSubscription>();
 
             int result = 0;
             await FeedbinSyncSqlite.resetReadStatus();
+
+            int s = await FeedbinSyncSqlite.getSubscriptions();
 
             if (settings.syncRead)
             {

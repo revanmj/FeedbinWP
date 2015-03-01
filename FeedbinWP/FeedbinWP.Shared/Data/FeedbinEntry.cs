@@ -27,6 +27,7 @@ namespace FeedbinWP.Data
         [PrimaryKey]
         public int id { get; set; }
         public int feed_id { get; set; }
+        public String feed_name { get; set; }
         public String title { get; set; }
         public String url { get; set; }
         public String author { get; set; }

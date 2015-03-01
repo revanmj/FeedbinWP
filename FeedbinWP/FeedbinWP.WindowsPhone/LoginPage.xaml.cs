@@ -70,7 +70,7 @@ namespace FeedbinWP
                 if (rootFrame != null && rootFrame.CanGoBack)
                     rootFrame.GoBack();
                 else if (!rootFrame.CanGoBack)
-                    Frame.Navigate(typeof(MainPage));
+                    Frame.Navigate(typeof(ArticleListPage));
             } else
             {
                 MessageDialog msgbox = new MessageDialog("Login unsuccesful!");

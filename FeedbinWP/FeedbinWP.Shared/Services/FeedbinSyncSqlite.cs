@@ -28,7 +28,7 @@ namespace FeedbinWP.Services
         static private String subscriptionsUrl = "subscriptions.json";
         static private String singleSubscriptionUrl = "subscriptions/"; // 3.json
 
-        static public async Task<bool> Login(String username, String password)
+        public static async Task<bool> Login(String username, String password)
         {
             using (var client = new HttpClient())
             {
@@ -70,7 +70,7 @@ namespace FeedbinWP.Services
                     if (ids.LastIndexOf(",") == ids.Length - 1)
                         ids = ids.Substring(0, ids.Length - 2);
                     String entries_json = await getEntries(ids);
-                    List<FeedbinEntry> list = parseEntriesJson(entries_json, 3);
+                    List<FeedbinEntry> list = await parseEntriesJson(entries_json, 3);
                     await db.InsertAllAsync(list);
                 }
                 return 1;
@@ -109,7 +109,7 @@ namespace FeedbinWP.Services
                     if (ids.LastIndexOf(",") == ids.Length - 1)
                         ids = ids.Substring(0, ids.Length - 2);
                     String entries_json = await getEntries(ids);
-                    List<FeedbinEntry> list = parseEntriesJson(entries_json, 1);
+                    List<FeedbinEntry> list = await parseEntriesJson(entries_json, 1);
                     await db.InsertAllAsync(list);
                 }
                 return 1;
@@ -148,7 +148,7 @@ namespace FeedbinWP.Services
                     if (ids.LastIndexOf(",") == ids.Length - 1)
                         ids = ids.Substring(0, ids.Length - 2);
                     String entries_json = await getEntries(ids);
-                    List<FeedbinEntry> list = parseEntriesJson(entries_json, 2);
+                    List<FeedbinEntry> list = await parseEntriesJson(entries_json, 2);
                     await db.InsertAllAsync(list);
                 }
                 return 1;
@@ -161,7 +161,7 @@ namespace FeedbinWP.Services
         public static async Task<int> getEntriesSince(DateTime since)
         {
             String data = await makeApiGetRequest(feedbinApiUrl + entriesSinceUrl + since.ToString("o"));
-            List<FeedbinEntry> entries = parseEntriesJson(data);
+            List<FeedbinEntry> entries = await parseEntriesJson(data);
             if (entries.Count > 0)
             {
                 SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
@@ -265,7 +265,7 @@ namespace FeedbinWP.Services
             return false;
         }
 
-        static public async Task<bool> addSubscription(String url)
+        public static async Task<bool> addSubscription(String url)
         {
             StringContent json = new StringContent("{\"feed_url\": \"" + url + "\"}");
             String data = await makeApiPostRequest(feedbinApiUrl + subscriptionsUrl, json);
@@ -274,7 +274,7 @@ namespace FeedbinWP.Services
             return false;
         }
 
-        static public async Task<bool> updateSubscription(int feed_id, String title)
+        public static async Task<bool> updateSubscription(int feed_id, String title)
         {
             StringContent message = new StringContent("{\"title\": \"" + title + "\"}");
             String data = await makeApiPostRequest(feedbinApiUrl + singleSubscriptionUrl + "/" + feed_id + "/update.json", message);
@@ -283,10 +283,36 @@ namespace FeedbinWP.Services
             return false;
         }
 
-        static public async Task<bool> deleteSubscription(int feed_id)
+        public static async Task<bool> deleteSubscription(int feed_id)
         {
             bool result = await makeApiDeleteRequest(feedbinApiUrl + singleSubscriptionUrl + feed_id + ".json");
             return result;
+        }
+
+        public static async Task<int> getSubscriptions()
+        {
+            String data_entries = await makeApiGetRequest(feedbinApiUrl + subscriptionsUrl);
+            if (data_entries != null)
+            {
+                List<FeedbinSubscription> subs = parseSubsriptionsJson(data_entries);
+                SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+                await db.InsertAllAsync(subs);
+                return 1;
+            }
+            else
+                return 0;
+        }
+
+        public static async Task<FeedbinSubscription> getSingleSubscription(int id)
+        {
+            String data_entries = await makeApiGetRequest(feedbinApiUrl + singleSubscriptionUrl + id + ".json");
+            if (data_entries != null)
+            {
+                List<FeedbinSubscription> subs = parseSubsriptionsJson(data_entries);
+                return subs[0];
+            }
+            else
+                return null;
         }
 
         public static async Task<int> cleanupDatabase(int entriesToKeep)
@@ -314,7 +340,7 @@ namespace FeedbinWP.Services
             return 1;
         }
 
-        static private List<FeedbinEntry> parseEntriesJson(String data, int mode = 0)
+        private static async Task<List<FeedbinEntry>> parseEntriesJson(String data, int mode = 0)
         {
             JsonArray parsedEntries = JsonArray.Parse(data);
             List<FeedbinEntry> entries = new List<FeedbinEntry>();
@@ -340,6 +366,11 @@ namespace FeedbinWP.Services
                                                       values[2],
                                                       values[3],
                                                       DateTime.Parse(values[4]));
+
+                SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+                FeedbinSubscription sub = await db.Table<FeedbinSubscription>().Where(x => x.feed_id == entry.feed_id).FirstOrDefaultAsync();
+                entry.feed_name = sub.title;
+
                 switch (mode)
                 {
                     case 1:
@@ -355,14 +386,44 @@ namespace FeedbinWP.Services
 
 
                 Regex _htmlRegex = new Regex("<.*?>");
-                entry.summary = _htmlRegex.Replace(entry.content, string.Empty).Trim();//.Replace("\n", "").Replace("\r", "");
+                entry.summary = _htmlRegex.Replace(entry.content, string.Empty).Trim();
 
                 entries.Add(entry);
             }
             return entries;
         }
 
-        static private async Task<bool> makeApiDeleteRequest(String url)
+        private static List<FeedbinSubscription> parseSubsriptionsJson(String data) 
+        {
+            JsonArray parsedEntries = JsonArray.Parse(data);
+            List<FeedbinSubscription> subs = new List<FeedbinSubscription>();
+            foreach (JsonValue obj in parsedEntries)
+            {
+                String[] names = { "title", "feed_url", "site_url" };
+                String[] values = new String[3];
+
+                for (int i = 0; i < names.Length; i++)
+                {
+                    if (obj.GetObject().GetNamedValue(names[i]).ValueType != JsonValueType.Null)
+                        values[i] = obj.GetObject().GetNamedString(names[i]);
+                    else
+                        values[i] = " ";
+
+                }
+
+
+                FeedbinSubscription sub = new FeedbinSubscription((int)obj.GetObject().GetNamedNumber("id"),
+                                                      (int)obj.GetObject().GetNamedNumber("feed_id"),
+                                                      values[0],
+                                                      values[1],
+                                                      values[2]);
+
+                subs.Add(sub);
+            }
+            return subs;
+        }
+
+        private static async Task<bool> makeApiDeleteRequest(String url)
         {
             using (var client = new HttpClient())
             {
@@ -384,7 +445,7 @@ namespace FeedbinWP.Services
             }
         }
 
-        static private async Task<String> makeApiPostRequest(String url, StringContent message)
+        private static async Task<String> makeApiPostRequest(String url, StringContent message)
         {
             using (var client = new HttpClient())
             {
@@ -410,7 +471,7 @@ namespace FeedbinWP.Services
             }
         }
 
-        static private async Task<String> makeApiGetRequest(String url)
+        private static async Task<String> makeApiGetRequest(String url)
         {
             using (var client = new HttpClient())
             {

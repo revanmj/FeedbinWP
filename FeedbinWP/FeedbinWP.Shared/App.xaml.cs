@@ -117,7 +117,7 @@ namespace FeedbinWP
                         throw new Exception("Failed to create initial page");
                     }
                 } 
-                else if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+                else if (!rootFrame.Navigate(typeof(ArticleListPage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
