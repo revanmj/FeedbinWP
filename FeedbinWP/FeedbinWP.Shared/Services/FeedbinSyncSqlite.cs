@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using Windows.Security.Credentials;
 using FeedbinWP.Data;
+using System.Globalization;
 
 namespace FeedbinWP.Services
 {
@@ -308,6 +309,8 @@ namespace FeedbinWP.Services
             {
                 List<FeedbinSubscription> subs = parseSubsriptionsJson(data_entries);
                 SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
+                await db.DropTableAsync<FeedbinSubscription>();
+                await db.CreateTableAsync<FeedbinSubscription>();
                 await db.InsertAllAsync(subs);
                 return 1;
             }
@@ -377,7 +380,7 @@ namespace FeedbinWP.Services
                                                       values[1],
                                                       values[2],
                                                       values[3],
-                                                      DateTime.Parse(values[4]));
+                                                      DateTime.Parse(values[4], CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal));
 
                 SQLiteAsyncConnection db = new SQLiteAsyncConnection("feedbinData.db");
                 FeedbinSubscription sub = await db.Table<FeedbinSubscription>().Where(x => x.feed_id == entry.feed_id).FirstOrDefaultAsync();
@@ -446,7 +449,7 @@ namespace FeedbinWP.Services
 
                 client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(credential.UserName + ":" + credential.Password)));
 
-                var response = await client.DeleteAsync(new Uri(feedbinApiUrl + subscriptionsUrl));
+                var response = await client.DeleteAsync(new Uri(url));
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -471,7 +474,7 @@ namespace FeedbinWP.Services
 
                 message.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
-                var response = await client.PostAsync(new Uri(feedbinApiUrl + subscriptionsUrl), message);
+                var response = await client.PostAsync(new Uri(url), message);
                 var reply = await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)

@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Navigation;
 using FeedbinWP.Data;
 using FeedbinWP.Services;
 using Windows.ApplicationModel.Resources;
+using FeedbinWP.Converters;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -43,6 +44,8 @@ namespace FeedbinWP
             progressbar = StatusBar.GetForCurrentView().ProgressIndicator;
 
             loader = new ResourceLoader();
+
+            webview.DefaultBackgroundColor = StringToColor.convert("#000000");
 
             HardwareButtons.BackPressed += HardwareButtons_BackPressed;
         }
@@ -74,7 +77,7 @@ namespace FeedbinWP
             using (StreamReader sRead = new StreamReader(await file.OpenStreamForReadAsync()))
                 style = await sRead.ReadToEndAsync();
 
-            webview.NavigateToString(style + "<h1>" + entry.title + "</h1>" + entry.author + "</br>" + entry.feed_name + "</br>"+ entry.published.ToLocalTime().ToString("dd.MM.yyyy HH:mm") + "</br></br>" + entry.content);
+            webview.NavigateToString(style + "<h1>" + entry.title + "</h1> <span style=\"color: #717171 !important;\">" + entry.author + "</br>" + entry.feed_name + "</br>" + entry.published.ToString("d MMMM yyyy - HH:mm") + "</span></br></br>" + entry.content);
 
             _dataTransferManager = DataTransferManager.GetForCurrentView();
             _dataTransferManager.DataRequested += OnDataRequested;
