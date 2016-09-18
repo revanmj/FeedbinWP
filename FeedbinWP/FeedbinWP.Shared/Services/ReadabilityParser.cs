@@ -10,7 +10,7 @@ namespace FeedbinWP.Services
     class ReadabilityParser
     {
         private static String readabilityUrl = "https://www.readability.com/api/content/v1/parser?url=";
-        private static String readabilityToken = "&token=f36291f9960c1036f40ab453f569fddbf6729847";
+        private static String readabilityToken = "&token=f36291f9960c1036f40ab453f569fddbf6729847"; // Don't bother, account connected to this one is deleted :)
 
         public static async Task<String> parseViaReadability(String url)
         {
