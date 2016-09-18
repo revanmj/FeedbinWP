@@ -6,4 +6,4 @@ Simple [Feedbin](https://github.com/feedbin/feedbin-api) client for Windows Phon
 
 Since I won't be updating this one, I decided to publish code for archive purposes (quality isn't that great, so I wouldn't try learning from it - for example code responsible for handling SQLite and Feedbin queries is in one class instead of two or three).
 
-App can download and display list of articles (ArticleListPage) that can be opened in separate view (ArticlePage) which supports sharing a link, marking item as starred and parsing article via Readability service in order to get its full contents.
+App can download and display list of articles (ArticleListPage) that can be opened in separate view (ArticlePage) which supports sharing a link, marking item as starred and parsing article via [Readability service](https://www.readability.com/developers/api/parser) in order to get its full contents.
